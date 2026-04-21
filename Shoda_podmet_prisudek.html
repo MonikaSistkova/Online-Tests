@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mistr Shody: Chytáky i/y</title>
+    <style>
+        :root {
+            --bg: #fdf2f8;
+            --card: #ffffff;
+            --primary: #ec4899;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #334155; display: flex; justify-content: center; padding: 20px; }
+        .wrapper { max-width: 700px; width: 100%; background: var(--card); padding: 30px; border-radius: 24px; box-shadow: 0 10px 25px rgba(236, 72, 153, 0.15); border: 3px solid #fbcfe8; }
+        h1 { text-align: center; color: var(--primary); font-size: 2rem; margin-bottom: 10px; }
+        .score-box { background: #fdf2f8; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; margin-bottom: 25px; border: 2px solid #fce7f3; display: flex; justify-content: space-around; }
+        .q-card { background: #fff; border: 2px solid #f1f5f9; padding: 20px; border-radius: 18px; margin-bottom: 20px; transition: 0.3s; }
+        .sentence { font-size: 1.3rem; margin-bottom: 15px; }
+        .sentence span { color: var(--secondary); font-weight: bold; background: #f5f3ff; padding: 0 8px; border-radius: 5px; }
+        .options { display: flex; gap: 10px; }
+        button { flex: 1; padding: 12px; border: 2px solid #e2e8f0; background: white; border-radius: 12px; cursor: pointer; font-size: 1.2rem; font-weight: bold; transition: all 0.2s; }
+        button:hover:not(:disabled) { border-color: var(--primary); background: #fdf2f8; color: var(--primary); }
+        .correct { background: var(--success) !important; color: white !important; border-color: var(--success) !important; }
+        .wrong { background: var(--error) !important; color: white !important; border-color: var(--error) !important; }
+        .hint { margin-top: 12px; font-size: 0.95rem; display: none; padding: 10px; background: #f8fafc; border-radius: 8px; border-left: 4px solid var(--secondary); color: #475569; }
+        #dl-btn { display: block; margin: 30px auto 0; padding: 12px 24px; background: var(--primary); color: white; text-decoration: none; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3); transition: 0.3s; text-align: center; max-width: 250px; }
+        #dl-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <h1>✨ Shoda: Velká Výzva ✨</h1>
+    <div class="score-box">
+        <span>Správně: <span id="ok" style="color: var(--success)">0</span></span>
+        <span>Chyby: <span id="ko" style="color: var(--error)">0</span></span>
+    </div>
+
+    <div id="quiz"></div>
+
+    <a href="#" id="dl-btn">💾 Stáhnout toto cvičení</a>
+</div>
+
+<script>
+    const data = [
+        { s: "Rodiče tam s námi <b>nebyl_</b>.", a: "i", h: "Chyták! Rodiče jsou vždy mužský rod životný." },
+        { s: "Divocí koně <b>běžal_</b> přes lán.", a: "i", h: "Koně (v mn. č.) jsou v přísudku životní = -i." },
+        { s: "Dni se krátce <b>vlekl_</b>.", a: "i", h: "Pozor! Tvar 'dni' je výjimka, píšeme -i (ale dny se vlekly)." },
+        { s: "Děti si krásně <b>hrál_</b>.", a: "y", h: "Ty děti = ženský rod v množném čísle = -y." },
+        { s: "Lidičky se na nás <b>usmál_</b>.", a: "i", h: "Lidičky jsou sice 'ty', ale v přísudku mají vždy -i." },
+        { s: "Oči se mu únavou <b>klížil_</b>.", a: "y", h: "Párové orgány (oči, uši, ramena) mají v přísudku -y." },
+        { s: "Kuřata v ohradě <b>pípal_</b>.", a: "a", h: "Rod střední v množném čísle = -a." },
+        { s: "Davy fanoušků <b>jásal_</b>.", a: "y", h: "Podmětem jsou 'davy' (rod mužský neživotný) = -y." }
+    ];
+
+    let ok = 0; let ko = 0;
+    const container = document.getElementById('quiz');
+
+    data.forEach((d, i) => {
+        const card = document.createElement('div');
+        card.className = 'q-card';
+        card.innerHTML = `
+            <div class="sentence">${i+1}. ${d.s.replace('_', '<span>?</span>')}</div>
+            <div class="options">
+                <button onclick="check(this, 'i', '${d.a}')">i</button>
+                <button onclick="check(this, 'y', '${d.a}')">y</button>
+                <button onclick="check(this, 'a', '${d.a}')">a</button>
+            </div>
+            <div class="hint">💡 ${d.h}</div>
+        `;
+        container.appendChild(card);
+    });
+
+    function check(btn, choice, correct) {
+        const parent = btn.parentElement;
+        const hint = parent.nextElementSibling;
+        const buttons = parent.querySelectorAll('button');
+        
+        buttons.forEach(b => b.disabled = true);
+        hint.style.display = 'block';
+
+        if(choice === correct) {
+            btn.classList.add('correct');
+            ok++; document.getElementById('ok').innerText = ok;
+        } else {
+            btn.classList.add('wrong');
+            ko++; document.getElementById('ko').innerText = ko;
+            buttons.forEach(b => { if(b.innerText === correct) b.classList.add('correct'); });
+        }
+    }
+
+    document.getElementById('dl-btn').onclick = function() {
+        const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([html], {type: 'text/html'});
+        this.href = window.URL.createObjectURL(blob);
+        this.download = 'chytaky_shoda.html';
+    };
+</script>
+
+</body>
+</html>

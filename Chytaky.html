@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>🌙 Noční mise: Mistr Shody</title>
+    <style>
+        :root {
+            --night-bg: #0f172a;
+            --card-bg: #1e293b;
+            --gold: #fbbf24;
+            --neon: #8b5cf6;
+            --text: #f1f5f9;
+        }
+        body {
+            background: var(--night-bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex; justify-content: center; padding: 20px;
+            background-image: radial-gradient(circle, #ffffff22 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .container { max-width: 650px; width: 100%; }
+        h1 { text-align: center; color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+        .score-box {
+            position: sticky; top: 10px; z-index: 10;
+            background: rgba(30, 41, 59, 0.9); border: 2px solid var(--neon);
+            padding: 15px; border-radius: 20px; display: flex; justify-content: space-around;
+            margin-bottom: 25px; backdrop-filter: blur(10px);
+        }
+        .q-card {
+            background: var(--card-bg); border-radius: 20px; padding: 20px;
+            margin-bottom: 20px; border: 1px solid #334155; transition: 0.3s;
+        }
+        .sentence { font-size: 1.25rem; margin-bottom: 15px; line-height: 1.6; }
+        .sentence b { color: var(--gold); text-shadow: 0 0 5px rgba(251, 191, 36, 0.3); }
+        .btns { display: flex; gap: 10px; }
+        button {
+            flex: 1; padding: 12px; border: 2px solid var(--neon); background: transparent;
+            color: var(--neon); border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1.1rem;
+        }
+        button:hover:not(:disabled) { background: var(--neon); color: white; box-shadow: 0 0 15px var(--neon); }
+        .msg {
+            margin-top: 15px; padding: 12px; border-radius: 10px; display: none;
+            font-size: 1rem; animation: fadeIn 0.5s;
+        }
+        .correct-msg { background: rgba(16, 185, 129, 0.2); border-left: 4px solid #10b981; color: #34d399; }
+        .wrong-msg { background: rgba(239, 68, 68, 0.2); border-left: 4px solid #ef4444; color: #f87171; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        #dl { display: block; text-align: center; margin-top: 40px; color: var(--gold); text-decoration: none; border: 1px dashed var(--gold); padding: 10px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌠 Vesmírná Shoda i/y</h1>
+    <div class="score-box">
+        <span>⭐ Správně: <span id="ok">0</span></span>
+        <span>☁️ Nevadí: <span id="ko">0</span></span>
+    </div>
+
+    <div id="quiz"></div>
+
+    <a href="#" id="dl">📥 Stáhnout si svou noční misi do PC</a>
+</div>
+
+<script>
+    const traps = [
+        { s: "Dni v týdnu rychle <b>utekl_</b>.", a: "i", c: "Skvěle! Právě jsi odhalil největší chyták s podmětem 'dni'. 🚀", w: "To nic není! Tvar 'dni' je zrádný, pamatuje si ho málokdo. Příště už budeš vědět! 🕊️" },
+        { s: "Lidičky se na nás <b>smál_</b>.", a: "i", c: "Úžasné! Lidičky tě nenachytali, jsi profík! 👑", w: "Klid, tohle poplete i dospělé. Lidičky jsou sice 'ty', ale v přísudku chtějí 'i'. ☕" },
+        { s: "Divocí koně <b>běžal_</b> po louce.", a: "i", c: "Správně! Koně jsou životní, přesně tak! 🐎", w: "V pořádku, vydechni si. Koně jsou výjimka, příště je dostaneš! 💪" },
+        { s: "Rodiče s námi <b>souhlasil_</b>.", a: "i", c: "Perfektní! Rodiče jsou prostě životní. 👨‍👩‍👧", w: "Nevadí, učení je cesta. Pamatuj, že rodiče jsou vždy mužský životný. ✨" },
+        { s: "Děti si vesele <b>hrál_</b>.", a: "y", c: "Jasně! Ty děti = y. Výborně! 🎈", w: "Hlavu vzhůru. Děti jsou v množném čísle rodu ženského, je to nezvyk. 🧸" },
+        { s: "Oči se mu <b>zavíral_</b> únavou.", a: "y", c: "Skvělý postřeh! Párové orgány máš v malíčku. 👁️", w: "Žádný stres. Části těla jako oči/uši mají vždy -y. Jde ti to skvěle! 🌙" },
+        { s: "Tisíce lidí <b>tleskal_</b>.", a: "y", c: "Bravo! Podmět 'tisíce' tě neoklamal. 👏", w: "To je v pohodě. Člověk kouká na slovo 'lidé', ale podmět jsou 'tisíce'. 🔢" },
+        { s: "Dřevěné uši hrnce se <b>ulomil_</b>.", a: "y", c: "Přesně tak! Nejsou to uši na hlavě, takže -y. 🍯", w: "V klidu. Tohle je těžký rozdíl mezi věcí a částí těla. Jsi šikovný/á! 🌱" },
+        { s: "Davy fanoušků <b>jásal_</b>.", a: "y", c: "Vynikající! Davy jsou neživotné. 🏟️", w: "Nevěš hlavu. Podmět 'davy' je neživotný, i když jsou v něm lidé. 🌊" },
+        { s: "Stovky včel <b>létal_</b> kolem.", a: "y", c: "Skvělý úlovek! Stovky = y. 🐝", w: "Netrap se tím. Stačí se podívat na to první slovo - stovky. 🌻" },
+        { s: "Slečny a děti <b>zpíval_</b>.", a: "y", c: "Správně! Ženský rod + střední rod = y. 🎶", w: "To je v suchu. Když není nikde muž životný, dáváme y. 🌸" },
+        { s: "Kuřata vesele <b>pípal_</b>.", a: "a", c: "Paráda! Rod střední v množném čísle je 'a'. 🐥", w: "Klídek, kuřata jsou ta - a ta pípal-a. Je to jen nezvyk! 🐣" },
+        { s: "Zástupy turistů se <b>valil_</b>.", a: "y", c: "Trefa! Zástupy jsou ty (neživ.). 🗺️", w: "Nic se neděje. Zástup je neživotný, i když ho tvoří lidé. 🚶" },
+        { s: "Pytle s pískem <b>nestačil_</b>.", a: "y", c: "Bezchybně! Pytle jsou neživotné. 🏜️", w: "Pohoda. Pytle jsou 'ty', takže píšeme -y. 🧱" },
+        { s: "Obě oči <b>zářil_</b> štěstím.", a: "y", c: "Skvěle, párové orgány tě nezastaví! ✨", w: "Uklidni se, je to jen gramatika. Oči/uši mají prostě rády -y. 💙" },
+        { s: "Ukazatelé se <b>pohnul_</b>.", a: "i", c: "Geniální! Ukazatelé jako lidi = i. 📍", w: "V pohodě! Pokud jsou to 'ukazatelé' (jako lidé), píšeme -i. Je to těžké! 🧭" },
+        { s: "Dny strávené u moře <b>utekl_</b>.", a: "y", c: "Správně! Dny (neživ.) = y. 🏖️", w: "Nevadí. Pamatuj: Dni = i, Dny = y. Oboje je správně, jen se mění koncovka! 🌊" },
+        { s: "Sousedovy kočky <b>mňoukal_</b>.", a: "y", c: "Přesně tak! Ty kočky = y. 🐈", w: "Klid. Kočky jsou rodu ženského, tak tam patří y. 🐾" },
+        { s: "Psi a kočky si <b>hrál_</b>.", a: "i", c: "Výborně! Pes je životný a vyhrává! 🐕", w: "Nic se neděje. Stačí jeden pes (muž. živ.) a už tam musí být -i. 🦴" },
+        { s: "Všechna ta léta <b>uplynul_</b>.", a: "a", h: "a", c: "Dokončeno! Léta (střední rod) končí na 'a'. Skvělá práce! ⏳", w: "Nevadí, jsi u konce! Ta léta = uplynul-a. Zvládl/a jsi to! 🌠" }
+    ];
+
+    let okCount = 0; let koCount = 0;
+    const quiz = document.getElementById('quiz');
+
+    traps.forEach((t, i) => {
+        const card = document.createElement('div');
+        card.className = 'q-card';
+        card.innerHTML = `
+            <div class="sentence">${i+1}. ${t.s}</div>
+            <div class="btns">
+                <button onclick="check(this,'i','${t.a}','${t.c.replace(/'/g, "\\'")}','${t.w.replace(/'/g, "\\'")}')">i</button>
+                <button onclick="check(this,'y','${t.a}','${t.c.replace(/'/g, "\\'")}','${t.w.replace(/'/g, "\\'")}')">y</button>
+                <button onclick="check(this,'a','${t.a}','${t.c.replace(/'/g, "\\'")}','${t.w.replace(/'/g, "\\'")}')">a</button>
+            </div>
+            <div class="msg"></div>
+        `;
+        quiz.appendChild(card);
+    });
+
+    function check(btn, choice, ans, winMsg, loseMsg) {
+        const parent = btn.parentElement;
+        const msgDiv = parent.nextElementSibling;
+        const buttons = parent.querySelectorAll('button');
+        buttons.forEach(b => b.disabled = true);
+        msgDiv.style.display = 'block';
+
+        if(choice === ans) {
+            btn.style.background = "#10b981"; btn.style.color = "white";
+            msgDiv.className = "msg correct-msg"; msgDiv.innerText = winMsg;
+            okCount++; document.getElementById('ok').innerText = okCount;
+        } else {
+            btn.style.background = "#ef4444"; btn.style.color = "white";
+            msgDiv.className = "msg wrong-msg"; msgDiv.innerText = loseMsg;
+            koCount++; document.getElementById('ko').innerText = koCount;
+            buttons.forEach(b => { if(b.innerText === ans) b.style.borderColor = "#10b981"; });
+        }
+    }
+
+    document.getElementById('dl').onclick = function() {
+        const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([html], {type: 'text/html'});
+        this.href = window.URL.createObjectURL(blob);
+        this.download = 'nocni_mise_shoda.html';
+    };
+</script>
+
+</body>
+</html>

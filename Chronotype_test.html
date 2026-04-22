@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chytáky a speciální případy: Shoda podmětu s přísudkem</title>
+    <style>
+        :root {
+            --bg: #f0f4ff;
+            --card: #ffffff;
+            --primary: #4f46e5;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0f2fe 50%, #f0fdf4 100%);
+            color: #1e293b;
+            display: flex;
+            justify-content: center;
+            padding: 24px 16px;
+            min-height: 100vh;
+        }
+        .wrapper { max-width: 760px; width: 100%; }
+        h1 { text-align: center; color: var(--primary); font-size: 2rem; margin-bottom: 6px; }
+        .subtitle { text-align: center; color: #64748b; margin-bottom: 22px; font-size: 1rem; }
+        .score-box {
+            background: white; padding: 14px 20px; border-radius: 18px;
+            font-weight: bold; font-size: 1.05rem; margin-bottom: 14px;
+            border: 2px solid #e2e8f0; display: flex; justify-content: space-around;
+            flex-wrap: wrap; gap: 8px; box-shadow: 0 2px 10px rgba(79,70,229,0.08);
+        }
+        .progress-wrap { margin-bottom: 24px; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; margin-bottom: 5px; }
+        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, var(--success), var(--primary));
+            border-radius: 99px; transition: width 0.5s ease; width: 0%;
+        }
+        .section-header {
+            display: flex; align-items: center; gap: 10px; padding: 11px 18px;
+            border-radius: 14px; margin: 28px 0 10px; font-weight: bold;
+            font-size: 1.05rem; color: white; box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+        }
+        .section-header .icon { font-size: 1.4rem; }
+        .section-info {
+            padding: 11px 14px; border-radius: 10px; margin-bottom: 14px;
+            font-size: 0.92rem; color: #334155; line-height: 1.5;
+        }
+        .q-card {
+            background: white; border: 2px solid #e2e8f0; padding: 20px;
+            border-radius: 18px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .sentence { font-size: 1.2rem; margin-bottom: 14px; line-height: 1.6; }
+        .blank {
+            display: inline-block; color: var(--secondary); font-weight: bold;
+            background: #ede9fe; padding: 1px 10px; border-radius: 6px;
+            min-width: 28px; text-align: center;
+        }
+        .options { display: flex; gap: 10px; }
+        .opt-btn {
+            flex: 1; padding: 11px 6px; border: 2px solid #e2e8f0; background: white;
+            border-radius: 12px; cursor: pointer; font-size: 1.15rem; font-weight: bold;
+            transition: all 0.18s; color: #334155;
+        }
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--primary); background: #eef2ff; color: var(--primary);
+            transform: translateY(-1px);
+        }
+        .opt-btn:disabled { cursor: default; }
+        .opt-btn.correct { background: var(--success) !important; color: white !important; border-color: var(--success) !important; }
+        .opt-btn.wrong   { background: var(--error)   !important; color: white !important; border-color: var(--error)   !important; }
+        .hint {
+            display: none; margin-top: 13px; font-size: 0.92rem; padding: 10px 13px;
+            background: #f8fafc; border-radius: 9px; border-left: 4px solid var(--secondary);
+            color: #334155; line-height: 1.55;
+        }
+        #result-box {
+            display: none; background: white; padding: 32px 24px; border-radius: 22px;
+            text-align: center; margin-top: 24px; box-shadow: 0 6px 24px rgba(79,70,229,0.1);
+            border: 2px solid #e2e8f0;
+        }
+        #result-emoji { font-size: 3rem; margin-bottom: 10px; }
+        #result-text { font-size: 1.35rem; font-weight: bold; color: #1e293b; margin-bottom: 8px; }
+        #result-sub { color: #64748b; font-size: 0.97rem; }
+        #dl-btn {
+            display: block; margin: 28px auto 10px; padding: 13px 30px;
+            background: var(--primary); color: white; text-decoration: none;
+            border-radius: 50px; font-weight: bold; box-shadow: 0 4px 14px rgba(79,70,229,0.3);
+            transition: all 0.25s; text-align: center; max-width: 300px;
+            font-size: 1rem; cursor: pointer; border: none;
+        }
+        #dl-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>🧠 Chytáky a speciální případy</h1>
+    <p class="subtitle">Shoda podmětu s přísudkem — test i/y/a</p>
+
+    <div class="score-box">
+        <span>✅ Správně: <strong id="ok" style="color:var(--success)">0</strong></span>
+        <span>📊 Zodpovězeno: <strong id="answered">0</strong> / <strong id="total">0</strong></span>
+        <span>❌ Chyby: <strong id="ko" style="color:var(--error)">0</strong></span>
+    </div>
+
+    <div class="progress-wrap">
+        <div class="progress-label"><span>Postup</span><span id="pct">0 %</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    </div>
+
+    <div id="quiz"></div>
+
+    <div id="result-box">
+        <div id="result-emoji">🎉</div>
+        <div id="result-text"></div>
+        <div id="result-sub"></div>
+    </div>
+
+    <button id="dl-btn">💾 Stáhnout toto cvičení</button>
+</div>
+
+<script>
+const sections = [
+    {
+        title: "1️⃣ Několikanásobný podmět", icon: "👥", color: "#f97316",
+        info: "Pokud je podmětů více: alespoň jeden <b>mužský životný</b> → píšeme <b>-i</b>. Žádný mužský životný → píšeme <b>-y</b> (nebo <b>-a</b> pro střední rod).",
+        qs: [
+            { s: "Ženy, děti a muži tam přišl_ včas.", a: "i", h: "Muži = mužský rod životný → celý podmět dostává rod mužský životný → <b>přišli</b>." },
+            { s: "Ženy a děti tam přišl_ včas.", a: "y", h: "Žádný mužský rod životný (ženy = ženský, děti = střední) → <b>přišly</b>." },
+            { s: "Kočky, psi a králíci se vrátil_ domů.", a: "i", h: "Psi a králíci jsou mužský rod životný → celý podmět = mužský životný → <b>vrátili</b>." },
+            { s: "Stromy, keře a tráva bujně rostl_.", a: "y", h: "Žádný mužský rod životný (stromy, keře = neživotný; tráva = ženský) → <b>rostly</b>." }
+        ]
+    },
+    {
+        title: "2️⃣ Podmět za přísudkem", icon: "🔄", color: "#ec4899",
+        info: "Pravidlo shody platí <b>stejně</b>, i když podmět stojí až za přísudkem. Shoda se řídí celým podmětem, ne jen nejbližším slovem.",
+        qs: [
+            { s: "Na zahradě kvetl_ růže i tulipány.", a: "y", h: "Podmět stojí za přísudkem, ale žádný mužský životný → <b>kvetly</b>." },
+            { s: "Seděl_ tam ženy i muži.", a: "i", h: "Muži = mužský rod životný → <b>seděli</b>. Na pořadí podmět–přísudek nezáleží." },
+            { s: "Přišl_ tam děti a rodiče.", a: "i", h: "Chyták! Rodiče vypadají žensky, ale jsou mužský rod životný → <b>přišli</b>." }
+        ]
+    },
+    {
+        title: "3️⃣ Rod životný vs. neživotný", icon: "🧊", color: "#7c3aed",
+        info: "<b>Mužský životný</b> (lidé, zvířata, i gramaticky životná slova jako <i>sněhuláci</i>) → <b>-i</b>. <b>Mužský neživotný</b> (věci, stromy, sloupy…) → <b>-y</b>.",
+        qs: [
+            { s: "Sněhuláci tam stál_ celou zimu.", a: "i", h: "Chyták! Sněhuláci jsou mluvnicky mužský rod <b>životný</b> (i když nejsou živí) → <b>stáli</b>." },
+            { s: "Mohutné sloupy podpíral_ střechu chrámu.", a: "y", h: "Sloupy = mužský rod <b>neživotný</b> → <b>podpíraly</b>." },
+            { s: "Rodiče nás čekal_ u vchodu.", a: "i", h: "Chyták! Rodiče mají ženskou koncovku, ale jde o mužský rod životný → <b>čekali</b>." },
+            { s: "Staré stromy v parku dávno padal_.", a: "y", h: "Stromy = mužský rod <b>neživotný</b> → <b>padaly</b>." }
+        ]
+    },
+    {
+        title: "4️⃣ Trpný rod (pasivum)", icon: "📜", color: "#0891b2",
+        info: "V trpném rodě se shoda řídí <b>stejnými pravidly</b>. Podmět určuje tvar pomocného slovesa <i>být</i> (byl<b>i</b> / byl<b>y</b> / byl<b>a</b>).",
+        qs: [
+            { s: "Všechny domy v ulici byl_ postaveny dávno.", a: "y", h: "Domy = mužský rod <b>neživotný</b> → <b>byly</b> postaveny." },
+            { s: "Vojáci byl_ nasazeni do boje.", a: "i", h: "Vojáci = mužský rod <b>životný</b> → <b>byli</b> nasazeni." },
+            { s: "Zásilky byl_ odeslány včas.", a: "y", h: "Zásilky = ženský rod → <b>byly</b> odeslány." },
+            { s: "Závodníci byl_ odměněni medailemi.", a: "i", h: "Závodníci = mužský rod <b>životný</b> → <b>byli</b> odměněni." }
+        ]
+    },
+    {
+        title: "5️⃣ Podstatná jména pomnožná", icon: "🎻", color: "#16a34a",
+        info: "Pomnožná jména existují <b>jen v množném čísle</b>. Shoda se řídí jejich <b>mluvnickým rodem</b>, ne tím, jak vypadají.",
+        qs: [
+            { s: "Tyto dveře byl_ celý den zavřené.", a: "y", h: "Dveře = pomnožné, <b>ženský rod</b> → <b>byly</b> zavřené." },
+            { s: "Housle na pódiu dnes zněl_ krásně.", a: "y", h: "Housle = pomnožné, <b>ženský rod</b> → <b>zněly</b>." },
+            { s: "Nůžky na stole ležel_ otevřené.", a: "y", h: "Nůžky = pomnožné, <b>ženský rod</b> → <b>ležely</b>." },
+            { s: "Kamna v rohu pokoje hřál_.", a: "a", h: "Kamna = pomnožné, <b>střední rod</b> → <b>hřála</b>." }
+        ]
+    }
+];
+
+let ok = 0, ko = 0, answered = 0;
+const total = sections.reduce((sum, s) => sum + s.qs.length, 0);
+document.getElementById('total').textContent = total;
+const container = document.getElementById('quiz');
+let qNum = 0;
+
+sections.forEach(sec => {
+    const hdr = document.createElement('div');
+    hdr.className = 'section-header';
+    hdr.style.background = sec.color;
+    hdr.innerHTML = `<span class="icon">${sec.icon}</span>${sec.title}`;
+    container.appendChild(hdr);
+
+    const info = document.createElement('div');
+    info.className = 'section-info';
+    info.style.cssText = `background:${sec.color}18; border-left:4px solid ${sec.color};`;
+    info.innerHTML = `ℹ️ ${sec.info}`;
+    container.appendChild(info);
+
+    sec.qs.forEach(d => {
+        qNum++;
+        const card = document.createElement('div');
+        card.className = 'q-card';
+        card.innerHTML = `
+            <div class="sentence">${qNum}. ${d.s.replace('_','<span class="blank">?</span>')}</div>
+            <div class="options">
+                <button class="opt-btn" data-choice="i">-i</button>
+                <button class="opt-btn" data-choice="y">-y</button>
+                <button class="opt-btn" data-choice="a">-a</button>
+            </div>
+            <div class="hint"></div>
+        `;
+        card.querySelectorAll('.opt-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const btns = card.querySelectorAll('.opt-btn');
+                const hint = card.querySelector('.hint');
+                btns.forEach(b => b.disabled = true);
+                hint.innerHTML = '💡 ' + d.h;
+                hint.style.display = 'block';
+                answered++;
+                const pct = Math.round(answered / total * 100);
+                document.getElementById('answered').textContent = answered;
+                document.getElementById('progress').style.width = pct + '%';
+                document.getElementById('pct').textContent = pct + ' %';
+                if (btn.dataset.choice === d.a) {
+                    btn.classList.add('correct');
+                    document.getElementById('ok').textContent = ++ok;
+                } else {
+                    btn.classList.add('wrong');
+                    document.getElementById('ko').textContent = ++ko;
+                    btns.forEach(b => { if (b.dataset.choice === d.a) b.classList.add('correct'); });
+                }
+                if (answered === total) showResult();
+            });
+        });
+        container.appendChild(card);
+    });
+});
+
+function showResult() {
+    const box = document.getElementById('result-box');
+    box.style.display = 'block';
+    const pct = Math.round(ok / total * 100);
+    let emoji, text, sub;
+    if (pct === 100)     { emoji='🏆'; text='Perfektní výsledek!'; sub=`Zvládl(a) jsi všech ${total} otázek. Jsi skutečný mistr češtiny!`; }
+    else if (pct >= 80)  { emoji='🎉'; text=`Výborně! ${ok}/${total} správně (${pct} %)`; sub='Pár chytáků ti uniklo, ale celkově skvělý výkon!'; }
+    else if (pct >= 60)  { emoji='👍'; text=`Dobře! ${ok}/${total} správně (${pct} %)`; sub='Přečti si vysvětlení u chybných odpovědí a zkus to znovu.'; }
+    else                  { emoji='📚'; text=`${ok}/${total} správně (${pct} %)`; sub='Nevzdávej to! Projdi si pravidla u každé sekce a zkus znovu.'; }
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-text').textContent = text;
+    document.getElementById('result-sub').textContent = sub;
+    box.scrollIntoView({ behavior: 'smooth' });
+}
+
+document.getElementById('dl-btn').addEventListener('click', function () {
+    const blob = new Blob(['<!DOCTYPE html>\n' + document.documentElement.outerHTML], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'chytaky_shoda_specialni.html';
+    a.click();
+});
+</script>
+</body>
+</html>

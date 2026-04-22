@@ -2,115 +2,123 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Shoda podmětu s přísudkem - Cvičení</title>
+    <title>Shoda podmětu s přísudkem - Rychlotest</title>
     <style>
         :root {
             --primary: #4834d4;
-            --secondary: #686de0;
             --success: #2ecc71;
-            --error: #eb4d4b;
-            --bg: #f9f9fb;
+            --error: #ff4757;
+            --bg: #f0f2f5;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 40px 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); padding: 30px 15px; }
+        .container { max-width: 750px; margin: 0 auto; background: white; padding: 35px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         
-        h1 { text-align: center; color: var(--primary); font-size: 32px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .subtitle { text-align: center; color: #636e72; margin-bottom: 40px; font-size: 1.1em; }
-        
-        .row { margin-bottom: 18px; padding: 20px; border-radius: 15px; background: #fff; border: 2px solid #f1f2f6; transition: all 0.3s ease; }
-        .row:hover { border-color: var(--secondary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        
-        .sentence-box { font-size: 1.2em; font-weight: 500; display: flex; align-items: center; flex-wrap: wrap; }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; font-size: 2.2em; }
+        .subtitle { text-align: center; color: #636e72; margin-bottom: 35px; }
+
+        .item { 
+            margin-bottom: 15px; padding: 18px; border-radius: 15px; 
+            background: #fff; border: 2px solid #edeff2; 
+            transition: all 0.3s ease; 
+        }
+        .sentence { font-size: 1.15em; font-weight: 500; display: flex; align-items: center; flex-wrap: wrap; }
         
         input { 
-            width: 45px; height: 40px; text-align: center; font-size: 22px; font-weight: bold; 
-            border: 3px solid #dfe6e9; border-radius: 10px; margin: 0 12px; color: var(--primary); 
-            transition: 0.2s; 
+            width: 40px; height: 40px; text-align: center; font-size: 22px; font-weight: bold; 
+            border: 3px solid #dcdde1; border-radius: 10px; margin: 0 10px; 
+            transition: all 0.2s; outline: none;
         }
-        input:focus { border-color: var(--secondary); outline: none; background: #f1f2ff; }
+
+        .feedback-box { 
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            font-size: 0.95em; line-height: 1.5; margin-top: 0;
+        }
+        .show-feedback { max-height: 150px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #eee; }
+
+        .msg { font-weight: 800; display: block; margin-bottom: 3px; text-transform: uppercase; font-size: 0.85em; }
         
-        .btn { padding: 10px 25px; cursor: pointer; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; transition: 0.2s; font-size: 14px; }
-        .btn:hover { background: var(--secondary); box-shadow: 0 8px 20px rgba(104, 109, 224, 0.3); }
-        
-        .feedback { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; font-size: 1em; animation: slideIn 0.4s ease-out; line-height: 1.5; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-        
-        .correct { background: #e3fcef; color: #0e6245; border-left: 6px solid var(--success); }
-        .wrong { background: #fff4e5; color: #a35200; border-left: 6px solid #f39c12; }
-        
-        .emoji-span { font-size: 1.6em; margin-right: 15px; }
-        .encourage-text { font-weight: 800; display: block; margin-bottom: 4px; text-transform: uppercase; font-size: 0.9em; }
+        /* Barvy pro stavy */
+        .input-success { border-color: var(--success) !important; background: #e3fcef; color: #0e6245; }
+        .input-error { border-color: var(--error) !important; background: #fff2f2; color: #a80000; }
+        .text-success { color: #1e7e34; }
+        .text-error { color: #c0392b; }
+
+        .emoji { font-size: 1.4em; margin-right: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>📝 Shoda podmětu s přísudkem</h1>
-    <p class="subtitle">Speciální případy a chytáky – zvládneš všech 20? 💪</p>
+    <p class="subtitle">Stačí vepsat <b>i / y / a</b> a hned uvidíš, jak jsi na tom! 🚀</p>
 
     <div id="quiz"></div>
 </div>
 
 <script>
-const winMsgs = ["Bravo! 🏆", "Skvěle ty! ✨", "Jsi mistr češtiny! ✍️", "Bezchybně! 🚀", "Úžasná práce! 🌟"];
-const tryMsgs = ["Nevadí, zkus to znovu! 💪", "Téměř! Koukni na vysvětlení. 🧐", "Chyták, co? Příště ho dostaneš! 🧠", "Nevěš hlavu, učíš se! 🌱"];
-
 const data = [
-    { s: "Sněhuláci na zahradě pomalu tál", a: "i", e: "⛄", v: "Sněhulák je v mn. č. životný (ti sněhuláci)." },
-    { s: "Všechny moje mobily se náhle rozbil", a: "y", e: "📱", v: "Mobil je mužský rod neživotný (ty hrady)." },
-    { s: "Rodiče nás včera v kině neviděl", a: "i", e: "👪", v: "Rodiče jsou vždy mužský rod životný." },
-    { s: "Děvčata na pódiu krásně zpíval", a: "a", e: "🎤", v: "Děvče je rod střední, v množném čísle má -a (města)." },
-    { s: "Tyto staré dveře se samy otevřel", a: "y", e: "🚪", v: "Dveře jsou pomnožné, rod ženský." },
-    { s: "Davy fanoušků hlasitě jásal", a: "y", e: "📣", v: "Podmětem je 'dav' (neživ.), ne fanoušci." },
-    { s: "Děti si celé odpoledne hrál", a: "y", e: "⚽", v: "Děti jsou v množném čísle rodu ženského." },
-    { s: "Kozy na řezání dřeva se pod váhou prohýbal", a: "y", e: "🪵", v: "Nástroje (kozy) jsou neživotné." },
-    { s: "Dva dny nám velmi rychle uplynul", a: "y", e: "📅", v: "Dny jsou rod mužský neživotný." },
-    { s: "Na hřišti se sešl", a: "i", e: "🏃‍♂️", v: "Učitelé a žáci (přítomnost mužského životného rodu)." },
-    { s: "Oči se mi únavou samy zavřel", a: "y", e: "👀", v: "Párové orgány (oči, uši, ruce, nohy) = rod ženský." },
-    { s: "Koně se na pastvě volně pásl", a: "i", e: "🐎", v: "Kůň je v češtině rod mužský životný." },
-    { s: "Květiny ve váze už nadobro uvadl", a: "y", e: "💐", v: "Květiny jsou rod ženský." },
-    { s: "Stroje v dílně celou noc pracoval", a: "y", e: "⚙️", v: "Stroje jsou neživotné (ty stroje)." },
-    { s: "Zaoceánské lodě v přístavu zakotvil", a: "y", e: "🛳️", v: "Loď je rod ženský (ta loď bez lodě - píseň)." },
-    { s: "Malá housata se v trávě batolil", a: "a", e: "🐤", v: "Housata jsou rod střední (ta kuřata)." },
-    { s: "Všechna mračna se konečně rozplynul", a: "a", e: "☁️", v: "Mračna jsou rod střední (ta města)." },
-    { s: "Sousedovy kočky celou noc mňoukal", a: "y", e: "🐈", v: "Kočky jsou rod ženský." },
-    { s: "Stohy slámy při požáru rychle shořel", a: "y", e: "🔥", v: "Podmětem jsou 'stohy' (neživ.)." },
-    { s: "Tisíce diváků v aréně nadšeně tleskal", a: "y", e: "🏟️", v: "Podmětem je slovo 'tisíce' (ty hrady)." }
+    { s: "Sněhuláci na zahradě roztál", a: "i", e: "⛄", v: "Sněhuláci jsou životní (ti sněhuláci)." },
+    { s: "Všechny moje mobily se rozbil", a: "y", e: "📱", v: "Mobil je neživotný (ty hrady)." },
+    { s: "Rodiče na nás dlouho čekal", a: "i", e: "👪", v: "Rodiče jsou vždy mužský rod životný." },
+    { s: "Děvčata venku vesele běhal", a: "a", e: "👧", v: "Děvče je střední rod (ta města)." },
+    { s: "Housle v orchestru krásně hral", a: "y", e: "🎻", v: "Housle jsou pomnožné, rod ženský." },
+    { s: "Davy lidí se v metru tlačil", a: "y", e: "🚶", v: "Podmětem je 'dav' (ty hrady)." },
+    { s: "Děti si na písku hrál", a: "y", e: "⚽", v: "Dítě v mn. č. je rod ženský (ty děti)." },
+    { s: "Dřevěné kozy na řezání se polámal", a: "y", e: "🪵", v: "Kozy jako nástroje jsou neživotné." },
+    { s: "Dny plné slunce už skončil", a: "y", e: "📅", v: "Dny jsou rod mužský neživotný." },
+    { s: "Učitelé i žáci už odešl", a: "i", e: "🏫", v: "Mužský životný rod má vždy přednost." },
+    { s: "Oči mě z toho koukání bolel", a: "y", e: "👁️", v: "Oči, uši, ruce, nohy = v mn. č. vždy -y." },
+    { s: "Koně se na louce pásl", a: "i", e: "🐎", v: "Kůň je rod mužský životný." },
+    { s: "Květiny ve váze rychle uvadl", a: "y", e: "💐", v: "Květiny jsou rod ženský." },
+    { s: "Stroje v továrně hlučel", a: "y", e: "⚙️", v: "Stroje jsou neživotné (ty stroje)." },
+    { s: "Výletní lodě se pohupoval", a: "y", e: "🛳️", v: "Loď je rod ženský (vzor píseň)." },
+    { s: "Housata se v trávě schoval", a: "a", e: "🐤", v: "Housata jsou rod střední (ta kuřata)." },
+    { s: "Mračna na nebi nadobro zmizel", a: "a", e: "☁️", v: "Mračna jsou rod střední (ta města)." },
+    { s: "Sousedovy kočky se popral", a: "y", e: "🐈", v: "Kočky jsou rod ženský." },
+    { s: "Stohy slámy na poli shořel", a: "y", e: "🔥", v: "Podmětem jsou 'stohy' (ty hrady)." },
+    { s: "Tisíce diváků v aréně jásal", a: "y", e: "🏟️", v: "Podmětem je slovo 'tisíce' (ty hrady)." }
 ];
 
-const quizContainer = document.getElementById('quiz');
+const posCorrect = ["Výborně! Jsi jednička! 🌟", "Skvělá práce, jen tak dál! 🚀", "Jasná trefa! 🎯", "Jde ti to fantasticky! 🔥"];
+const posWrong = ["Nevadí, to byl těžký chyták! 🌱", "Klid, příště to dáš! 💪", "Skoro, zkus nad tím ještě mrknout. 🧐", "Žádný stres, učíme se! ✨"];
+
+const container = document.getElementById('quiz');
 
 data.forEach((item, index) => {
     const div = document.createElement('div');
-    div.className = 'row';
+    div.className = 'item';
     div.innerHTML = `
-        <div class="sentence-box">
-            <span class="emoji-span">${item.e}</span>
+        <div class="sentence">
+            <span class="emoji">${item.e}</span>
             <span>${item.s}</span>
-            <input type="text" id="in-${index}" maxlength="1" onkeypress="if(event.key==='Enter')check(${index})">.
-            <button class="btn" onclick="check(${index})">Zkontrolovat</button>
+            <input type="text" id="in-${index}" maxlength="1" oninput="validate(${index})">.
         </div>
-        <div id="fb-${index}" class="feedback"></div>
+        <div id="fb-${index}" class="feedback-box"></div>
     `;
-    quizContainer.appendChild(div);
+    container.appendChild(div);
 });
 
-function check(idx) {
+function validate(idx) {
     const input = document.getElementById(`in-${idx}`);
-    const val = input.value.toLowerCase().trim();
     const fb = document.getElementById(`fb-${idx}`);
-    fb.style.display = 'block';
+    const val = input.value.toLowerCase().trim();
     
+    if (val === "") {
+        fb.classList.remove('show-feedback');
+        input.className = "";
+        return;
+    }
+
+    fb.classList.add('show-feedback');
+
     if (val === data[idx].a) {
-        const m = winMsgs[Math.floor(Math.random() * winMsgs.length)];
-        fb.innerHTML = `<span class="encourage-text">${m}</span> 💡 <b>Vysvětlení:</b> ${data[idx].v}`;
-        fb.className = "feedback correct";
-        input.style.borderColor = "var(--success)";
+        const m = posCorrect[Math.floor(Math.random() * posCorrect.length)];
+        input.className = "input-success";
+        fb.innerHTML = `<span class="msg text-success">✅ ${m}</span> ${data[idx].v}`;
     } else {
-        const m = tryMsgs[Math.floor(Math.random() * tryMsgs.length)];
-        fb.innerHTML = `<span class="encourage-text">${m}</span> ❌ Správně patří koncovka <b>-${data[idx].a}</b>. <br> 💡 ${data[idx].v}`;
-        fb.className = "feedback wrong";
-        input.style.borderColor = "#f39c12";
+        const m = posWrong[Math.floor(Math.random() * posWrong.length)];
+        input.className = "input-error";
+        fb.innerHTML = `<span class="msg text-error">❌ ${m}</span> Správně je <b>-${data[idx].a}</b>. ${data[idx].v}`;
     }
 }
 </script>

@@ -1,216 +1,125 @@
+Jasná věc! Přidal jsem ten správný nadpis, vyladil barvy a ještě trochu "přikouzlil" na interaktivitě. Teď je to kompletní sada i s těmi povzbuzujícími hláškami a emoji. ✨
+
+Tady je finální kód, který si ulož jako .html:
+
+HTML
+
 <!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Cvičení: Shoda přísudku s podmětem</title>
+    <title>Shoda podmětu s přísudkem - Cvičení</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
-        h1 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .exercise-item { background: white; margin-bottom: 15px; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #3498db; }
-        .sentence { font-size: 1.2em; font-weight: bold; color: #2c3e50; }
-        .gap { color: #e74c3c; text-decoration: underline; }
-        .explanation { display: none; margin-top: 10px; padding: 10px; background-color: #e8f4fd; border-radius: 5px; font-style: italic; font-size: 0.95em; border-left: 3px solid #2ecc71; }
-        .show-btn { background-color: #3498db; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; font-size: 0.8em; }
-        .show-btn:hover { background-color: #2980b9; }
-        .emoji { margin-right: 8px; }
+        :root {
+            --primary: #4834d4;
+            --secondary: #686de0;
+            --success: #2ecc71;
+            --error: #eb4d4b;
+            --bg: #f9f9fb;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 40px 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        
+        h1 { text-align: center; color: var(--primary); font-size: 32px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .subtitle { text-align: center; color: #636e72; margin-bottom: 40px; font-size: 1.1em; }
+        
+        .row { margin-bottom: 18px; padding: 20px; border-radius: 15px; background: #fff; border: 2px solid #f1f2f6; transition: all 0.3s ease; }
+        .row:hover { border-color: var(--secondary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        
+        .sentence-box { font-size: 1.2em; font-weight: 500; display: flex; align-items: center; flex-wrap: wrap; }
+        
+        input { 
+            width: 45px; height: 40px; text-align: center; font-size: 22px; font-weight: bold; 
+            border: 3px solid #dfe6e9; border-radius: 10px; margin: 0 12px; color: var(--primary); 
+            transition: 0.2s; 
+        }
+        input:focus { border-color: var(--secondary); outline: none; background: #f1f2ff; }
+        
+        .btn { padding: 10px 25px; cursor: pointer; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; transition: 0.2s; font-size: 14px; }
+        .btn:hover { background: var(--secondary); box-shadow: 0 8px 20px rgba(104, 109, 224, 0.3); }
+        
+        .feedback { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; font-size: 1em; animation: slideIn 0.4s ease-out; line-height: 1.5; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .correct { background: #e3fcef; color: #0e6245; border-left: 6px solid var(--success); }
+        .wrong { background: #fff4e5; color: #a35200; border-left: 6px solid #f39c12; }
+        
+        .emoji-span { font-size: 1.6em; margin-right: 15px; }
+        .encourage-text { font-weight: 800; display: block; margin-bottom: 4px; text-transform: uppercase; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
-    <h1>📝 Čeština: Shoda (Chytáky a speciality)</h1>
+<div class="container">
+    <h1>📝 Shoda podmětu s přísudkem</h1>
+    <p class="subtitle">Speciální případy a chytáky – zvládneš všech 20? 💪</p>
 
-    <div class="exercise-item">
-        <div class="sentence">1. Sněhuláci na zahradě pomalu tál__ .</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: i</strong> <br>
-            💡 <em>Sněhulák</em> se v množném čísle chová jako rod mužský životný (ti sněhuláci). Proto píšeme -i.
+    <div id="quiz"></div>
+</div>
+
+<script>
+const winMsgs = ["Bravo! 🏆", "Skvěle ty! ✨", "Jsi mistr češtiny! ✍️", "Bezchybně! 🚀", "Úžasná práce! 🌟"];
+const tryMsgs = ["Nevadí, zkus to znovu! 💪", "Téměř! Koukni na vysvětlení. 🧐", "Chyták, co? Příště ho dostaneš! 🧠", "Nevěš hlavu, učíš se! 🌱"];
+
+const data = [
+    { s: "Sněhuláci na zahradě pomalu tál", a: "i", e: "⛄", v: "Sněhulák je v mn. č. životný (ti sněhuláci)." },
+    { s: "Všechny moje mobily se náhle rozbil", a: "y", e: "📱", v: "Mobil je mužský rod neživotný (ty hrady)." },
+    { s: "Rodiče nás včera v kině neviděl", a: "i", e: "👪", v: "Rodiče jsou vždy mužský rod životný." },
+    { s: "Děvčata na pódiu krásně zpíval", a: "a", e: "🎤", v: "Děvče je rod střední, v množném čísle má -a (města)." },
+    { s: "Tyto staré dveře se samy otevřel", a: "y", e: "🚪", v: "Dveře jsou pomnožné, rod ženský." },
+    { s: "Davy fanoušků hlasitě jásal", a: "y", e: "📣", v: "Podmětem je 'dav' (neživ.), ne fanoušci." },
+    { s: "Děti si celé odpoledne hrál", a: "y", e: "⚽", v: "Děti jsou v množném čísle rodu ženského." },
+    { s: "Kozy na řezání dřeva se pod váhou prohýbal", a: "y", e: "🪵", v: "Nástroje (kozy) jsou neživotné." },
+    { s: "Dva dny nám velmi rychle uplynul", a: "y", e: "📅", v: "Dny jsou rod mužský neživotný." },
+    { s: "Na hřišti se sešl", a: "i", e: "🏃‍♂️", v: "Učitelé a žáci (přítomnost mužského životného rodu)." },
+    { s: "Oči se mi únavou samy zavřel", a: "y", e: "👀", v: "Párové orgány (oči, uši, ruce, nohy) = rod ženský." },
+    { s: "Koně se na pastvě volně pásl", a: "i", e: "🐎", v: "Kůň je v češtině rod mužský životný." },
+    { s: "Květiny ve váze už nadobro uvadl", a: "y", e: "💐", v: "Květiny jsou rod ženský." },
+    { s: "Stroje v dílně celou noc pracoval", a: "y", e: "⚙️", v: "Stroje jsou neživotné (ty stroje)." },
+    { s: "Zaoceánské lodě v přístavu zakotvil", a: "y", e: "🛳️", v: "Loď je rod ženský (ta loď bez lodě - píseň)." },
+    { s: "Malá housata se v trávě batolil", a: "a", e: "🐤", v: "Housata jsou rod střední (ta kuřata)." },
+    { s: "Všechna mračna se konečně rozplynul", a: "a", e: "☁️", v: "Mračna jsou rod střední (ta města)." },
+    { s: "Sousedovy kočky celou noc mňoukal", a: "y", e: "🐈", v: "Kočky jsou rod ženský." },
+    { s: "Stohy slámy při požáru rychle shořel", a: "y", e: "🔥", v: "Podmětem jsou 'stohy' (neživ.)." },
+    { s: "Tisíce diváků v aréně nadšeně tleskal", a: "y", e: "🏟️", v: "Podmětem je slovo 'tisíce' (ty hrady)." }
+];
+
+const quizContainer = document.getElementById('quiz');
+
+data.forEach((item, index) => {
+    const div = document.createElement('div');
+    div.className = 'row';
+    div.innerHTML = `
+        <div class="sentence-box">
+            <span class="emoji-span">${item.e}</span>
+            <span>${item.s}</span>
+            <input type="text" id="in-${index}" maxlength="1" onkeypress="if(event.key==='Enter')check(${index})">.
+            <button class="btn" onclick="check(${index})">Zkontrolovat</button>
         </div>
-    </div>
+        <div id="fb-${index}" class="feedback"></div>
+    `;
+    quizContainer.appendChild(div);
+});
 
-    <div class="exercise-item">
-        <div class="sentence">2. Děvčata a koně běhal__ po louce.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: i</strong> <br>
-            💡 <em>Koně</em> (v doprovodu jiných rodů) si zachovávají životnost mužského rodu. Pokud by tam koně nebyli, bylo by to "běhala".
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">3. Na stole stál__ talíře i mísy.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 Několikanásobný podmět: talíře (neživ.) + mísy (žen.). Není zde žádný mužský životný člen, tedy -y.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">4. Ukazatel__ směru ukazoval__ k lesu.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: é / y</strong> <br>
-            💡 <em>Ukazatelé</em> (ti) by měli -i, ale <em>ukazatele</em> (ty - neživotné) mají -y. V tomto kontextu jde o věci, tedy -y.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">5. Rodiče se na nás nezlobil__ .</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: i</strong> <br>
-            💡 Slovo <em>rodiče</em> je vždy mužského rodu životného, i když vypadá jako rod ženský.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">6. Dveře zůstal__ pootevřené.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 <em>Dveře</em> jsou pomnožné podstatné jméno rodu ženského (vzor růže - ty dveře).
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">7. Přibyl__ tam nové stroje i lidé.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: i (nebo y)</strong> <br>
-            💡 Standardně <em>přibyli</em> (kvůli lidem). Protože je ale přísudek před podmětem, lze teoreticky použít shodu podle nejbližšího (stroje -> přibyly), ale -i je jistota.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">8. Dřevěné kozy na řezání se polámal__ .</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 Nejde o zvířata, ale o nástroje (neživ.). I kdyby šlo o zvířata, je to rod ženský, takže stále -y.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">9. Zástupy lidí proudil__ městem.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 Podmětem je slovo <em>zástupy</em> (hrad - ty zástupy), nikoliv lidé.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">10. Děti si hrál__ na písku.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 <em>Dítě</em> je v množném čísle rodu ženského (ty děti - vzor kost).
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">11. Ledoborce vyjel__ na moře.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: i / y</strong> <br>
-            💡 U slova <em>ledoborce/ledoborci</em> lze použít životný i neživotný tvar. Pokud použiješ koncovku -e, píšeš -y.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">12. Do soutěže se přihlásil__ dvě družstva.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: a</strong> <br>
-            💡 <em>Družstva</em> jsou rod střední (ta města). Shoda v mn. čísle rodu středního je -a.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">13. Tisíce diváků tleskal__ .</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 Podmětem jsou <em>tisíce</em> (hrad - ty tisíce), nikoliv diváci.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">14. My všichni jsme tam byl__ .</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: i</strong> <br>
-            💡 Zájmeno <em>my</em> zahrnuje mluvčího a předpokládá se přítomnost mužského rodu životného, pokud není výslovně řečeno jinak.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">15. Na obloze zářil__ hvězdy a měsíc.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 Podmět za přísudkem. Hvězdy (žen.) + měsíc (neživ. muž.). Žádná životnost = -y.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">16. Draci vyletěl__ vysoko.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: i / y</strong> <br>
-            💡 Pohádkoví draci jsou životní (-i), papíroví draci jsou neživotní (-y).
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">17. Hrobly byl__ vykopány.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 Trpný rod. <em>Hroby</em> (neživ. muž.) se řídí stejným pravidlem jako činný rod.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">18. Oči mě bolel__ .</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 U párových orgánů (oči, uši, ruce, nohy) je v množném čísle vždy koncovka -y (rod ženský).
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">19. Obě skupiny se setkal__ .</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 <em>Skupiny</em> (ženy - ty skupiny) jsou rod ženský.
-        </div>
-    </div>
-
-    <div class="exercise-item">
-        <div class="sentence">20. Husy a housata se popral__ o krmení.</div>
-        <button class="show-btn" onclick="toggle(this)">Zobrazit řešení</button>
-        <div class="explanation">
-            <strong>Výsledek: y</strong> <br>
-            💡 Husy (žen.) + housata (střed.). Pokud není v podmětu mužský životný rod a je tam rod ženský, píšeme -y.
-        </div>
-    </div>
-
-    <script>
-        function toggle(btn) {
-            var div = btn.nextElementSibling;
-            if (div.style.display === "block") {
-                div.style.display = "none";
-                btn.textContent = "Zobrazit řešení";
-            } else {
-                div.style.display = "block";
-                btn.textContent = "Skrýt řešení";
-            }
-        }
-    </script>
+function check(idx) {
+    const input = document.getElementById(`in-${idx}`);
+    const val = input.value.toLowerCase().trim();
+    const fb = document.getElementById(`fb-${idx}`);
+    fb.style.display = 'block';
+    
+    if (val === data[idx].a) {
+        const m = winMsgs[Math.floor(Math.random() * winMsgs.length)];
+        fb.innerHTML = `<span class="encourage-text">${m}</span> 💡 <b>Vysvětlení:</b> ${data[idx].v}`;
+        fb.className = "feedback correct";
+        input.style.borderColor = "var(--success)";
+    } else {
+        const m = tryMsgs[Math.floor(Math.random() * tryMsgs.length)];
+        fb.innerHTML = `<span class="encourage-text">${m}</span> ❌ Správně patří koncovka <b>-${data[idx].a}</b>. <br> 💡 ${data[idx].v}`;
+        fb.className = "feedback wrong";
+        input.style.borderColor = "#f39c12";
+    }
+}
+</script>
 
 </body>
 </html>

@@ -1,190 +1,217 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Holiday in Spain - Gap Fill</title>
+    <title>English B1 Test: The Magic of Books</title>
     <style>
         :root {
-            --primary-orange: #ff9f43;
-            --ocean-blue: #00d2d3;
-            --sand: #f7f1e3;
-            --dark-text: #2c3e50;
+            --book-cream: #f4ecd8;
+            --ink-blue: #2c3e50;
+            --leather-brown: #5d4037;
+            --paper-shadow: #dcd0b9;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--sand);
-            color: var(--dark-text);
+            background-color: #e0d7c6;
+            font-family: 'Georgia', serif;
+            color: var(--ink-blue);
             display: flex;
             justify-content: center;
-            padding: 20px;
-            line-height: 1.6;
+            padding: 40px 20px;
+            line-height: 1.8;
         }
 
-        .container {
-            background: white;
-            max-width: 700px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border-top: 8px solid var(--primary-orange);
-        }
-
-        .header-image {
-            width: 100%;
-            height: 250px;
-            background: url('https://images.unsplash.com/photo-1543722530-d2c3201371e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover;
+        .book-page {
+            background-color: var(--book-cream);
+            max-width: 800px;
+            padding: 50px;
+            border-radius: 5px;
+            box-shadow: 10px 10px 0px var(--paper-shadow), 
+                        15px 15px 25px rgba(0,0,0,0.1);
             position: relative;
+            border-left: 15px solid var(--leather-brown);
         }
 
-        .header-overlay {
+        .book-page::before {
+            content: "";
             position: absolute;
-            bottom: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            width: 100%;
-            color: white;
-            padding: 20px;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 1px solid rgba(0,0,0,0.05);
+            pointer-events: none;
         }
 
-        .content {
-            padding: 30px;
+        h1 {
+            text-align: center;
+            font-variant: small-caps;
+            border-bottom: 2px solid var(--leather-brown);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
         }
 
-        h1 { margin: 0; font-size: 1.8rem; }
-        p { font-size: 1.1rem; margin-bottom: 20px; }
+        .instructions {
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #7f8c8d;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+            text-align: justify;
+        }
 
         input[type="text"] {
-            border: none;
-            border-bottom: 2px dashed var(--ocean-blue);
-            width: 80px;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #ee5253;
-            outline: none;
             background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--ink-blue);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            width: 90px;
+            text-align: center;
+            color: #b33939;
+            font-weight: bold;
+            outline: none;
         }
 
         input[type="text"]:focus {
-            border-bottom: 2px solid var(--primary-orange);
+            background-color: rgba(255, 255, 255, 0.5);
         }
 
         .gap-num {
-            color: var(--ocean-blue);
+            font-size: 0.8rem;
+            vertical-align: super;
             font-weight: bold;
-            font-size: 0.9rem;
+            margin-right: 2px;
+            color: var(--leather-brown);
         }
 
-        .footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+        .controls {
+            margin-top: 40px;
             text-align: center;
         }
 
         button {
-            background-color: var(--primary-orange);
+            background-color: var(--leather-brown);
             color: white;
             border: none;
-            padding: 10px 25px;
-            border-radius: 25px;
-            cursor: pointer;
+            padding: 12px 30px;
+            font-family: 'Georgia', serif;
             font-size: 1rem;
-            transition: transform 0.2s;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: opacity 0.3s;
         }
 
         button:hover {
-            transform: scale(1.05);
-            background-color: #f39c12;
+            opacity: 0.9;
         }
 
         #result {
-            margin-top: 15px;
+            margin-top: 20px;
             font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .correct { color: #27ae60; }
+        .wrong { color: #c0392b; text-decoration: line-through; }
+
+        @media (max-width: 600px) {
+            .book-page { padding: 25px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header-image">
-        <div class="header-overlay">
-            <h1>Our Holiday in Spain</h1>
-            <small>Fill in the missing words to complete the story</small>
-        </div>
+<div class="book-page">
+    <h1>The Joy of Reading</h1>
+    <p class="instructions">Complete the text by writing ONE word in each gap.</p>
+
+    <div class="story">
+        <p>
+            I have always been a huge fan <span class="gap-num">(1)</span> <input type="text" id="g1"> reading. 
+            When I was a child, I used to spend hours in the local library. 
+            My parents always told me that books <span class="gap-num">(2)</span> <input type="text" id="g2"> 
+            the best way to travel without leaving your room.
+        </p>
+
+        <p>
+            Last month, I finished reading a fascinating novel <span class="gap-num">(3)</span> <input type="text" id="g3"> 
+            was written by a young Japanese author. The story takes place <span class="gap-num">(4)</span> <input type="text" id="g4"> 
+            a small village in the mountains. The main character is a girl 
+            <span class="gap-num">(5)</span> <input type="text" id="g5"> finds an old diary hidden in her attic. 
+            If she hadn't found it, she <span class="gap-num">(6)</span> <input type="text" id="g6"> never have 
+            discovered the secret of her family's past.
+        </p>
+
+        <p>
+            Nowadays, many people prefer e-books <span class="gap-num">(7)</span> <input type="text" id="g7"> 
+            traditional paper books. Although e-readers are very convenient, I still believe 
+            that <span class="gap-num">(8)</span> <input type="text" id="g8"> is nothing better than the smell 
+            of a new book. I am looking forward <span class="gap-num">(9)</span> <input type="text" id="g9"> 
+            visiting the book fair next week. I hope I <span class="gap-num">(10)</span> <input type="text" id="g10"> 
+            find some rare editions for my collection.
+        </p>
     </div>
 
-    <div class="content">
-        <p>
-            Our trip to Spain was wonderful! First, we flew to Valencia, one of the 
-            <span class="gap-num">(1)</span> <input type="text" id="q1"> 
-            beautiful cities in Spain. It's a picturesque and elegant port city. 
-            We stayed at Hampton by Hilton there for three nights. We went sightseeing and just relaxed at the swimming pool.
-        </p>
-
-        <p>
-            From Valencia, we flew to Ibiza, arriving 
-            <span class="gap-num">(2)</span> <input type="text" id="q2"> 
-            Saturday morning. We went to Las Salinas, 
-            <span class="gap-num">(3)</span> <input type="text" id="q3"> 
-            is one of the most popular beaches in Ibiza. The next day, we had a go 
-            <span class="gap-num">(4)</span> <input type="text" id="q4"> 
-            water skiing or parasailing. 
-        </p>
-
-        <p>
-            One night, we took a bus tour to a traditional Ibizan village and stayed for dinner and a Flamenco show. 
-            We heard Spanish songs for voice and guitar, and we saw traditional dances - it 
-            <span class="gap-num">(5)</span> <input type="text" id="q5"> 
-            a very special evening.
-        </p>
-
-        <p>
-            From Sant Jordi, we drove to San Rafael. We stayed there for two nights. 
-            The very next day, we went back to Ibiza and flew back to Valencia. 
-            We plan to come back to Spain soon, 
-            <span class="gap-num">(6)</span> <input type="text" id="q6"> 
-            for now, we're on our way to Portugal!
-        </p>
-
-        <div class="footer">
-            <button onclick="checkAnswers()">Check Answers</button>
-            <div id="result"></div>
-        </div>
+    <div class="controls">
+        <button onclick="checkTest()">Check My Answers</button>
+        <div id="result"></div>
     </div>
 </div>
 
 <script>
-    function checkAnswers() {
-        const answers = {
-            q1: "most",
-            q2: "on",
-            q3: "which",
-            q4: "at",
-            q5: "was",
-            q6: "but"
+    function checkTest() {
+        const keys = {
+            g1: "of",
+            g2: ["are", "were"],
+            g3: ["which", "that"],
+            g4: "in",
+            g5: ["who", "that"],
+            g6: "would",
+            g7: "to",
+            g8: "there",
+            g9: "to",
+            g10: ["will", "can"]
         };
 
         let score = 0;
-        for (let i = 1; i <= 6; i++) {
-            const input = document.getElementById('q' + i);
-            if (input.value.toLowerCase().trim() === answers['q' + i]) {
-                input.style.color = "#2ecc71"; // Green
+        let total = 10;
+
+        for (let i = 1; i <= total; i++) {
+            const input = document.getElementById('g' + i);
+            const userVal = input.value.toLowerCase().trim();
+            const correctVal = keys['g' + i];
+            
+            let isCorrect = false;
+            if (Array.isArray(correctVal)) {
+                if (correctVal.includes(userVal)) isCorrect = true;
+            } else {
+                if (userVal === correctVal) isCorrect = true;
+            }
+
+            if (isCorrect) {
+                input.style.color = "#27ae60";
                 score++;
             } else {
-                input.style.color = "#e74c3c"; // Red
+                input.style.color = "#c0392b";
             }
         }
 
         const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `You got ${score} out of 6 correct!`;
+        resultDiv.innerHTML = `Result: ${score} / ${total}`;
         
-        if (score === 6) {
-            resultDiv.style.color = "#2ecc71";
-            resultDiv.innerHTML += " 🌟 Excellent!";
+        if (score === total) {
+            resultDiv.className = "correct";
+            resultDiv.innerHTML += " - You are a literary genius!";
+        } else if (score > 6) {
+            resultDiv.style.color = "orange";
+            resultDiv.innerHTML += " - Good job!";
         } else {
-            resultDiv.style.color = "#34495e";
+            resultDiv.className = "wrong";
+            resultDiv.style.textDecoration = "none";
+            resultDiv.innerHTML += " - Keep practicing!";
         }
     }
 </script>

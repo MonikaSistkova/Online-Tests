@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbie Language Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffeaf2;
+            color: #444;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            max-width: 800px;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 20, 147, 0.2);
+            border: 3px solid #ff85b2;
+        }
+        h1 {
+            color: #e60073;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .intro {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 30px;
+            color: #888;
+        }
+        p {
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+        select {
+            padding: 5px;
+            border: 2px solid #ffb3d1;
+            border-radius: 8px;
+            background-color: #fff0f6;
+            cursor: pointer;
+            font-weight: bold;
+            color: #e60073;
+            transition: all 0.3s;
+        }
+        select:hover {
+            border-color: #e60073;
+        }
+        .feedback {
+            display: inline-block;
+            margin-left: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .correct { color: #28a745; }
+        .incorrect { color: #dc3545; }
+        .explanation {
+            font-size: 0.85em;
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            background: #fdfdfd;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎀 Barbie Quiz 🎀</h1>
+    <p class="intro">The Most Famous Doll in the World</p>
+
+    <div id="quiz-text">
+        <p>
+            In 1959, a doll named Barbie Millicent Roberts first appeared in the world of toys. 
+            Soon, everyone started to 
+            <select onchange="check(this, 'A', 'Skvěle! Call používáme pro jména.')">
+                <option value="">---</option>
+                <option value="A">call</option>
+                <option value="B">tell</option>
+                <option value="C">say</option>
+            </select> (50) her Barbie. 
+            
+            The doll, made by the American toy-company Mattel, has become the most successful doll in history. 
+            In fact, 90% of all American girls between 3 and 10 years have at least one Barbie doll 
+            <select onchange="check(this, 'B', 'Jasně! At home je ta správná vazba.')">
+                <option value="">---</option>
+                <option value="A">home</option>
+                <option value="B">at home</option>
+                <option value="C">in home</option>
+            </select> (51).
+
+            At present, Barbie is going through hard times because 
+            <select onchange="check(this, 'A', 'Výborně! Vazba there are značí, že tam jsou.')">
+                <option value="">---</option>
+                <option value="A">there are</option>
+                <option value="B">they are</option>
+                <option value="C">these are</option>
+            </select> (52) many rivals on the market. 
+            
+            For example, Bratz dolls, 
+            <select onchange="check(this, 'B', 'Správně! Which odkazuje na věci/panenky.')">
+                <option value="">---</option>
+                <option value="A">what</option>
+                <option value="B">which</option>
+                <option value="C">whose</option>
+            </select> (53) came to life seven years ago, present a great challenge for Barbie. 
+
+            These dolls 
+            <select onchange="check(this, 'B', 'Super! Look like znamená vypadat jako.')">
+                <option value="">---</option>
+                <option value="A">see</option>
+                <option value="B">look</option>
+                <option value="C">show</option>
+            </select> (54) more like today’s pop stars or actresses with miniskirts and 
+            <select onchange="check(this, 'C', 'Přesně! Lots of je hovorové a správné.')">
+                <option value="">---</option>
+                <option value="A">lot of</option>
+                <option value="B">a lot</option>
+                <option value="C">lots of</option>
+            </select> (55) make-up. 
+
+            What is more, it seems that Barbie 
+            <select onchange="check(this, 'B', 'Bezva! Pomocné doesn\'t pro zápor.')">
+                <option value="">---</option>
+                <option value="A">isn’t</option>
+                <option value="B">doesn’t</option>
+                <option value="C">hasn’t</option>
+            </select> (56) attract American teenage girls anymore.
+
+            <select onchange="check(this, 'C', 'Úžasné! Although znamená ačkoliv.')">
+                <option value="">---</option>
+                <option value="A">Because</option>
+                <option value="B">So</option>
+                <option value="C">Although</option>
+            </select> (57) sales have gone down in recent years, Barbie still has many fans. 
+
+            More and more doll lovers all 
+            <select onchange="check(this, 'A', 'Trefa! All over the world je klasika.')">
+                <option value="">---</option>
+                <option value="A">over</option>
+                <option value="B">on</option>
+                <option value="C">in</option>
+            </select> (58) the world have become collectors.
+
+            Since her birth, Barbie 
+            <select onchange="check(this, 'B', 'Máš to! Předpřítomný čas, protože to trvá.')">
+                <option value="">---</option>
+                <option value="A">changed</option>
+                <option value="B">has changed</option>
+                <option value="C">changes</option>
+            </select> (59) her image many times. 
+
+            Originally she 
+            <select onchange="check(this, 'A', 'Správně! Wear -> wore (nosit oblečení).')">
+                <option value="">---</option>
+                <option value="A">wore</option>
+                <option value="B">took</option>
+                <option value="C">put</option>
+            </select> (60) decent length skirts and Mattel decided 
+            <select onchange="check(this, 'A', 'Paráda! Decide se pojí s to + infinitiv.')">
+                <option value="">---</option>
+                <option value="A">to give</option>
+                <option value="B">giving</option>
+                <option value="C">give</option>
+            </select> (61) Barbie a more colourful neon look.
+
+            Nowadays, Mattel isn’t selling as many Barbies 
+            <select onchange="check(this, 'C', 'Skvěle! As ... as pro porovnání.')">
+                <option value="">---</option>
+                <option value="A">like</option>
+                <option value="B">than</option>
+                <option value="C">as</option>
+            </select> (62) before, but Mattel opened 
+            <select onchange="check(this, 'C', 'Ano! Its vyjadřuje přivlastnění (jeho).')">
+                <option value="">---</option>
+                <option value="A">it</option>
+                <option value="B">it’s</option>
+                <option value="C">its</option>
+            </select> (63) Barbie store in Shanghai where girls can even 
+            <select onchange="check(this, 'C', 'Dokonalé! Po can následuje základní tvar.')">
+                <option value="">---</option>
+                <option value="A">to create</option>
+                <option value="B">creating</option>
+                <option value="C">create</option>
+            </select> (64) their own fashion designs.
+        </p>
+    </div>
+</div>
+
+<script>
+    function check(selectElement, correctValue, feedbackText) {
+        // Odstranění staré zprávy
+        let oldFeedback = selectElement.nextElementSibling;
+        if (oldFeedback && oldFeedback.classList.contains('feedback-container')) {
+            oldFeedback.remove();
+        }
+
+        const feedbackContainer = document.createElement('span');
+        feedbackContainer.className = 'feedback-container';
+
+        if (selectElement.value === correctValue) {
+            feedbackContainer.innerHTML = `<span class="feedback correct"> ✨ Správně!</span><span class="explanation">${feedbackText}</span>`;
+            selectElement.style.borderColor = "#28a745";
+        } else if (selectElement.value !== "") {
+            feedbackContainer.innerHTML = `<span class="feedback incorrect"> 💖 Skoro!</span><span class="explanation">To nevadí, zkus to znovu. I Barbie se učí nové věci!</span>`;
+            selectElement.style.borderColor = "#dc3545";
+        }
+
+        selectElement.after(feedbackContainer);
+    }
+</script>
+
+</body>
+</html>

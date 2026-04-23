@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Holiday in Spain - Gap Fill</title>
+    <style>
+        :root {
+            --primary-orange: #ff9f43;
+            --ocean-blue: #00d2d3;
+            --sand: #f7f1e3;
+            --dark-text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--sand);
+            color: var(--dark-text);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            background: white;
+            max-width: 700px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border-top: 8px solid var(--primary-orange);
+        }
+
+        .header-image {
+            width: 100%;
+            height: 250px;
+            background: url('https://images.unsplash.com/photo-1543722530-d2c3201371e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover;
+            position: relative;
+        }
+
+        .header-overlay {
+            position: absolute;
+            bottom: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            width: 100%;
+            color: white;
+            padding: 20px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        p { font-size: 1.1rem; margin-bottom: 20px; }
+
+        input[type="text"] {
+            border: none;
+            border-bottom: 2px dashed var(--ocean-blue);
+            width: 80px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #ee5253;
+            outline: none;
+            background: transparent;
+        }
+
+        input[type="text"]:focus {
+            border-bottom: 2px solid var(--primary-orange);
+        }
+
+        .gap-num {
+            color: var(--ocean-blue);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+
+        button {
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background-color: #f39c12;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-image">
+        <div class="header-overlay">
+            <h1>Our Holiday in Spain</h1>
+            <small>Fill in the missing words to complete the story</small>
+        </div>
+    </div>
+
+    <div class="content">
+        <p>
+            Our trip to Spain was wonderful! First, we flew to Valencia, one of the 
+            <span class="gap-num">(1)</span> <input type="text" id="q1"> 
+            beautiful cities in Spain. It's a picturesque and elegant port city. 
+            We stayed at Hampton by Hilton there for three nights. We went sightseeing and just relaxed at the swimming pool.
+        </p>
+
+        <p>
+            From Valencia, we flew to Ibiza, arriving 
+            <span class="gap-num">(2)</span> <input type="text" id="q2"> 
+            Saturday morning. We went to Las Salinas, 
+            <span class="gap-num">(3)</span> <input type="text" id="q3"> 
+            is one of the most popular beaches in Ibiza. The next day, we had a go 
+            <span class="gap-num">(4)</span> <input type="text" id="q4"> 
+            water skiing or parasailing. 
+        </p>
+
+        <p>
+            One night, we took a bus tour to a traditional Ibizan village and stayed for dinner and a Flamenco show. 
+            We heard Spanish songs for voice and guitar, and we saw traditional dances - it 
+            <span class="gap-num">(5)</span> <input type="text" id="q5"> 
+            a very special evening.
+        </p>
+
+        <p>
+            From Sant Jordi, we drove to San Rafael. We stayed there for two nights. 
+            The very next day, we went back to Ibiza and flew back to Valencia. 
+            We plan to come back to Spain soon, 
+            <span class="gap-num">(6)</span> <input type="text" id="q6"> 
+            for now, we're on our way to Portugal!
+        </p>
+
+        <div class="footer">
+            <button onclick="checkAnswers()">Check Answers</button>
+            <div id="result"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkAnswers() {
+        const answers = {
+            q1: "most",
+            q2: "on",
+            q3: "which",
+            q4: "at",
+            q5: "was",
+            q6: "but"
+        };
+
+        let score = 0;
+        for (let i = 1; i <= 6; i++) {
+            const input = document.getElementById('q' + i);
+            if (input.value.toLowerCase().trim() === answers['q' + i]) {
+                input.style.color = "#2ecc71"; // Green
+                score++;
+            } else {
+                input.style.color = "#e74c3c"; // Red
+            }
+        }
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = `You got ${score} out of 6 correct!`;
+        
+        if (score === 6) {
+            resultDiv.style.color = "#2ecc71";
+            resultDiv.innerHTML += " 🌟 Excellent!";
+        } else {
+            resultDiv.style.color = "#34495e";
+        }
+    }
+</script>
+
+</body>
+</html>

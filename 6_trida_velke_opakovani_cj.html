@@ -1,255 +1,310 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jarní Maraton Češtiny - 50 Otázek</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-    :root {
-        --spring-yellow: #fff176;
-        --flower-yellow: #fdd835;
-        --leaf-green: #9ccc65;
-        --dark-text: #4e342e;
-        --card-bg: #ffffff;
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body {
-        font-family: 'Montserrat', sans-serif;
-        background: #fffde7 url('https://www.transparenttextures.com/patterns/natural-paper.png');
-        color: var(--dark-text);
-        padding: 20px;
-    }
-    .container { max-width: 850px; margin: 0 auto; }
-    
-    header {
-        text-align: center;
-        padding: 3rem 1rem;
-        background: var(--flower-yellow);
-        border-radius: 30px;
-        box-shadow: 0 8px 0 #f9a825;
-        margin-bottom: 2rem;
-        border: 4px solid #fff;
-    }
-    h1 { font-weight: 900; font-size: 2.2rem; text-transform: uppercase; color: #5d4037; }
-    .subtitle { font-weight: 700; color: #795548; font-size: 1.1rem; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarní Maraton Češtiny - 50 Otázek</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fffde7;
+            --primary-yellow: #fdd835;
+            --accent-yellow: #fbc02d;
+            --spring-green: #8bc34a;
+            --text-dark: #3e2723;
+            --correct-bg: #e8f5e9;
+            --correct-text: #2e7d32;
+            --wrong-bg: #ffebee;
+            --wrong-text: #c62828;
+        }
 
-    .sticky-stats {
-        position: sticky; top: 10px; z-index: 1000;
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(5px);
-        padding: 15px 25px;
-        border-radius: 50px;
-        border: 3px solid var(--flower-yellow);
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 2rem; font-weight: 700;
-    }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
 
-    .q-card {
-        background: var(--card-bg);
-        border-radius: 20px;
-        padding: 25px;
-        margin-bottom: 1.5rem;
-        border: 2px solid #e0e0e0;
-        position: relative;
-        transition: transform 0.2s;
-    }
-    .q-card:hover { transform: scale(1.01); border-color: var(--flower-yellow); }
-    .q-num { background: var(--flower-yellow); padding: 5px 12px; border-radius: 10px; font-weight: 900; margin-right: 10px; }
-    .q-topic { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; color: var(--leaf-green); display: block; margin-bottom: 10px; }
-    .q-text { font-size: 1.15rem; font-weight: 700; margin-bottom: 1.5rem; }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
-    
-    .opt-btn {
-        background: #fffde7; border: 2px solid var(--spring-yellow);
-        padding: 14px; border-radius: 12px; cursor: pointer;
-        font-family: inherit; font-weight: 700; color: var(--dark-text);
-        transition: all 0.2s; text-align: left;
-    }
-    .opt-btn:hover:not(:disabled) { background: var(--flower-yellow); transform: translateY(-2px); }
-    .opt-btn.correct { background: #81c784 !important; color: white; border-color: #4caf50; }
-    .opt-btn.wrong { background: #e57373 !important; color: white; border-color: #f44336; }
+        header {
+            background: var(--primary-yellow);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 6px 0 #f9a825;
+            margin-bottom: 30px;
+        }
 
-    .feedback {
-        margin-top: 1rem; padding: 12px; border-radius: 10px;
-        background: #f1f8e9; border: 1px solid var(--leaf-green);
-        font-size: 0.9rem; display: none;
-    }
-    .feedback.show { display: block; animation: slideIn 0.3s; }
+        h1 { margin: 0; font-weight: 900; font-size: 2rem; color: #5d4037; }
 
-    .finish-btn {
-        width: 100%; padding: 20px; border-radius: 20px;
-        border: none; background: #9ccc65; color: white;
-        font-size: 1.5rem; font-weight: 900; cursor: pointer;
-        box-shadow: 0 6px 0 #689f38; margin: 2rem 0 5rem;
-    }
-    .finish-btn:hover { background: #8bc34a; }
+        .stats-bar {
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 3px solid var(--primary-yellow);
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
 
-    #summary {
-        display: none; background: white; padding: 40px;
-        border-radius: 30px; text-align: center; border: 6px solid var(--flower-yellow);
-    }
-    .big-score { font-size: 5rem; font-weight: 900; color: var(--flower-yellow); }
+        .q-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid #eee;
+            transition: 0.3s;
+        }
 
-    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-</style>
+        .q-topic {
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--spring-green);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .q-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .opt-btn {
+            background: #fffde7;
+            border: 2px solid var(--primary-yellow);
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            background: var(--primary-yellow);
+        }
+
+        /* Stavy po kliknutí */
+        .opt-btn.correct { background: var(--correct-bg) !important; border-color: var(--correct-text); color: var(--correct-text); }
+        .opt-btn.wrong { background: var(--wrong-bg) !important; border-color: var(--wrong-text); color: var(--wrong-text); }
+        .opt-btn.missed { border: 2px dashed var(--correct-text); }
+
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none; /* Skryto do kliknutí */
+            font-size: 0.95rem;
+            border-left: 5px solid var(--spring-green);
+            background: #f9fbe7;
+        }
+
+        .finish-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            background: var(--spring-green);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            margin: 40px 0;
+            box-shadow: 0 6px 0 #689f38;
+        }
+
+        #summary {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            border: 5px solid var(--primary-yellow);
+        }
+
+        @media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>🌼 Jarní Čestinářský Maraton 🌼</h1>
-        <p class="subtitle">50 těžkých otázek v jarním hávu</p>
+        <h1>🌼 Jarní Škola Češtiny 🌼</h1>
+        <p>50 EXPERTNÍCH OTÁZEK</p>
     </header>
 
-    <div class="sticky-stats">
-        <span id="progText">Vykvetlo: 0 / 50</span>
-        <span id="scoreText">Úspěšnost: 0%</span>
+    <div class="stats-bar">
+        <span id="stat-done">Hotovo: 0 / 50</span>
+        <span id="stat-score">Body: 0</span>
     </div>
 
-    <div id="quizBox"></div>
+    <div id="quiz-container"></div>
 
-    <button class="finish-btn" onclick="showFinal()">UKÁZAT VÝSLEDKY</button>
+    <button class="finish-btn" onclick="showFinal()">UKÁZAT CELKOVÉ SKÓRE</button>
 
     <div id="summary">
-        <h2>Tvé jarní vysvědčení:</h2>
-        <div class="big-score" id="finalScore">0/50</div>
-        <p id="finalMsg" style="margin: 20px 0; font-size: 1.3rem;"></p>
-        <button class="finish-btn" onclick="location.reload()">Zkusit znovu</button>
+        <h2 style="font-size: 3rem; color: var(--accent-yellow);" id="final-points">0 / 50</h2>
+        <p id="final-msg" style="font-size: 1.2rem; font-weight: 700;"></p>
+        <button class="finish-btn" onclick="location.reload()">HRÁT ZNOVU</button>
     </div>
 </div>
 
 <script>
 const QUESTIONS = [
-    // 1-10: Větné členy (Po, Př, PUM, PUČ, PUZ)
-    {t:"Větné členy", s:"(Sněženky) už vykoukly z hlíny.", o:["Podmět","Přísudek","PUM"], c:0, why:"Sněženky jsou vykonavatelem děje -> Podmět."},
-    {t:"Větné členy", s:"Slunce (hřeje) čím dál víc.", o:["Podmět","Přísudek","PUZ"], c:1, why:"Hřeje vyjadřuje činnost podmětu -> Přísudek."},
-    {t:"Větné členy", s:"Vlaštovky přiletěly (z jihu).", o:["PUM","PUČ","PUZ"], c:0, why:"Odkud? Z jihu -> Příslovečné určení místa."},
-    {t:"Větné členy", s:"Petr (vesele) pletl pomlázku.", o:["PUČ","PUZ","PUM"], c:1, why:"Jak? Vesele -> Příslovečné určení způsobu."},
-    {t:"Větné členy", s:"(V dubnu) bývá proměnlivé počasí.", o:["PUM","PUČ","PUZ"], c:1, why:"Kdy? V dubnu -> Příslovečné určení času."},
-    {t:"Větné členy", s:"Na louce (rozkvetly) petrklíče.", o:["Přísudek","Podmět","PUM"], c:0, why:"Co udělaly? Rozkvetly -> Přísudek."},
-    {t:"Větné členy", s:"Zajíci běhají (po poli).", o:["PUM","PUČ","PUZ"], c:0, why:"Kde? Po poli -> Příslovečné určení místa."},
-    {t:"Větné členy", s:"Babička (pomalu) sela semínka.", o:["PUZ","PUČ","PUM"], c:0, why:"Jak? Pomalu -> Příslovečné určení způsobu."},
-    {t:"Větné členy", s:"(Včera) začalo jaro.", o:["PUČ","PUM","PUZ"], c:0, why:"Kdy? Včera -> Příslovečné určení času."},
-    {t:"Větné členy", s:"Děti (u potoka) pouštěly lodičky.", o:["PUM","PUČ","PUZ"], c:0, why:"Kde? U potoka -> Příslovečné určení místa."},
+    // VĚTNÉ ČLENY (1-10)
+    {t:"Větný člen", s:"Na louce (rozkvetly) první petrklíče.", o:["Podmět","Přísudek","PUM"], c:1, why:"Rozkvetly vyjadřuje činnost podmětu -> Přísudek."},
+    {t:"Větný člen", s:"(Petr) plete pomlázku z vrbového proutí.", o:["Podmět","Přísudek","PUZ"], c:0, why:"Kdo plete? Petr -> Podmět."},
+    {t:"Větný člen", s:"Včely létají (z květu na květ).", o:["PUM","PUČ","PUZ"], c:0, why:"Odkud? Kam? -> Příslovečné určení místa."},
+    {t:"Větný člen", s:"Sníh (rychle) roztál.", o:["PUČ","PUZ","PUM"], c:1, why:"Jak roztál? Rychle -> Příslovečné určení způsobu."},
+    {t:"Větný člen", s:"(V březnu) se probouzí příroda.", o:["PUM","PUČ","PUZ"], c:1, why:"Kdy? V březnu -> Příslovečné určení času."},
+    {t:"Větný člen", s:"Zajíci (běhají) po poli.", o:["Přísudek","Podmět","PUM"], c:0, why:"Co dělají? Běhají -> Přísudek."},
+    {t:"Větný člen", s:"Babička peče (v kuchyni) beránka.", o:["PUM","PUČ","PUZ"], c:0, why:"Kde? V kuchyni -> Příslovečné určení místa."},
+    {t:"Větný člen", s:"Sluníčko svítilo (jasně).", o:["PUZ","PUČ","PUM"], c:0, why:"Jak svítilo? Jasně -> Příslovečné určení způsobu."},
+    {t:"Větný člen", s:"(Zítra) půjdeme na procházku.", o:["PUČ","PUM","PUZ"], c:0, why:"Kdy? Zítra -> Příslovečné určení času."},
+    {t:"Větný člen", s:"(Vlaštovky) stavěly hnízdo.", o:["Podmět","Přísudek","PUM"], c:0, why:"Kdo stavěl? Vlaštovky -> Podmět."},
 
-    // 11-20: Příčestí minulé (Shoda) - HARD
-    {t:"Příčestí", s:"Děti a jeňata se ___ na slunci.", o:["vyhřívali","vyhřívaly","vyhřívala"], c:2, why:"Děti (ž.) + Jeňata (stř. mn. č.) -> koncovka -a."},
-    {t:"Příčestí", s:"Včely a čmeláci ___ na květy.", o:["usedali","usedaly"], c:0, why:"Čmeláci jsou muž. životní -> koncovka -i."},
-    {t:"Příčestí", s:"Davy lidí ___ jarní vzduch.", o:["nasávali","nasávaly"], c:1, why:"Davy (neživ.) jsou podmětem -> koncovka -y."},
-    {t:"Příčestí", s:"Mrazy konečně ___.", o:["ustoupili","ustoupily"], c:1, why:"Mrazy (neživ.) -> koncovka -y."},
-    {t:"Příčestí", s:"Oči se jí ___ radostí.", o:["rozšířili","rozšířily"], c:1, why:"Párové orgány (oči, uši) mají v mn. č. vždy -y."},
-    {t:"Příčestí", s:"Děvčata ___ velikonoční vajíčka.", o:["barvili","barvaly"], c:1, why:"Děvčata (ženský rod) -> koncovka -y."},
-    {t:"Příčestí", s:"Ptáci ___ hnízda.", o:["stavěli","stavěly"], c:0, why:"Ptáci (muž. živ.) -> koncovka -i."},
-    {t:"Příčestí", s:"Stromy na zahradě ___.", o:["rozkvetli","rozkvetly"], c:1, why:"Stromy (neživ.) -> koncovka -y."},
-    {t:"Příčestí", s:"Housata se ___ v trávě.", o:["batolili","batolily","batolila"], c:2, why:"Housata (stř. mn. č.) -> koncovka -a."},
-    {t:"Příčestí", s:"Rodiče ___ jarní úklid.", o:["plánovali","plánovaly"], c:0, why:"Rodiče (muž. živ.) -> koncovka -i."},
+    // SHODA (11-20)
+    {t:"Příčestí", s:"Děti a koťata si ___ v trávě.", o:["hráli","hrály","hrála"], c:2, why:"Děti (ž.) + koťata (stř. mn. č.) -> koncovka -a."},
+    {t:"Příčestí", s:"Davy lidí ___ na jarní trhy.", o:["mířili","mířily"], c:1, why:"Podmět jsou davy (neživ.) -> koncovka -y."},
+    {t:"Příčestí", s:"Děvčata ___ kraslice.", o:["malovali","malovaly"], c:1, why:"Děvčata (ženský rod) -> koncovka -y."},
+    {t:"Příčestí", s:"Psi a kočky se ___ na slunci.", o:["vyhřívali","vyhřívaly"], c:0, why:"Psi (muž. živ.) v podmětu -> koncovka -i."},
+    {t:"Příčestí", s:"Oči se mi ___ radostí.", o:["rozzářili","rozzářily"], c:1, why:"Párové orgány (oči, uši, nohy) -> vždy -y."},
+    {t:"Příčestí", s:"Větve stromů se ve větru ___.", o:["hýbali","hýbaly"], c:1, why:"Větve (ženský rod) -> koncovka -y."},
+    {t:"Příčestí", s:"Koledníci ___ dům od domu.", o:["chodili","chodily"], c:0, why:"Koledníci (muž. živ.) -> koncovka -i."},
+    {t:"Příčestí", s:"Sněženky už ___.", o:["vykoukli","vykoukly"], c:1, why:"Sněženky (ženský rod) -> koncovka -y."},
+    {t:"Příčestí", s:"Housata ___ po dvoře.", o:["běhali","běhaly","běhala"], c:2, why:"Housata (stř. mn. č.) -> koncovka -a."},
+    {t:"Příčestí", s:"Rodiče ___ jarní výlet.", o:["připravili","připravily"], c:0, why:"Rodiče (muž. živ.) -> koncovka -i."},
 
-    // 21-30: Mně / Mě
-    {t:"Mně/Mě", s:"Jaro ___ vždy potěší.", o:["mě","mně"], c:0, why:"4. pád (koho?) -> mě."},
-    {t:"Mně/Mě", s:"Ke ___ přiletěl motýl.", o:["mě","mně"], c:1, why:"3. pád po předložce 'k' -> mně."},
-    {t:"Mně/Mě", s:"Vzpomeň si na ___ při pletení.", o:["mě","mně"], c:0, why:"4. pád -> mě (tě)."},
-    {t:"Mně/Mě", s:"O ___ se strýc nebál.", o:["mě","mně"], c:0, why:"4. pád -> mě."},
-    {t:"Mně/Mě", s:"Pomoz ___ s tou zahrádkou.", o:["mě","mně"], c:1, why:"3. pád (komu?) -> mně (tobě)."},
-    {t:"Mně/Mě", s:"Podíval se na ___.", o:["mě","mně"], c:0, why:"4. pád -> mě."},
-    {t:"Mně/Mě", s:"Při ___ stálo štěstí.", o:["mě","mně"], c:1, why:"6. pád -> mně."},
-    {t:"Mně/Mě", s:"Vidíš ___ v tom houští?", o:["mě","mně"], c:0, why:"4. pád -> mě."},
-    {t:"Mně/Mě", s:"Bez ___ na výlet nechoďte.", o:["mě","mně"], c:0, why:"2. pád -> mě."},
-    {t:"Mně/Mě", s:"V ___ se probudila naděje.", o:["mě","mně"], c:1, why:"6. pád -> mně."},
+    // MĚ / MNĚ (21-30)
+    {t:"Mě/Mně", s:"Podívej se na ___.", o:["mě","mně"], c:0, why:"4. pád (koho?) -> mě."},
+    {t:"Mě/Mně", s:"Přijď ke ___ na zahradu.", o:["mě","mně"], c:1, why:"3. pád (ke komu?) -> mně (tobě)."},
+    {t:"Mě/Mně", s:"Vzpomeň si na ___.", o:["mě","mně"], c:0, why:"4. pád -> mě."},
+    {t:"Mě/Mně", s:"Pomoz ___ s tím záhonem.", o:["mě","mně"], c:1, why:"3. pád (komu?) -> mně."},
+    {t:"Mě/Mně", s:"Bez ___ tam nechoď.", o:["mě","mně"], c:0, why:"2. pád -> mě."},
+    {t:"Mě/Mně", s:"O ___ se nemusíš bát.", o:["mě","mně"], c:0, why:"4. pád -> mě."},
+    {t:"Mě/Mně", s:"V ___ se probudila radost.", o:["mě","mně"], c:1, why:"6. pád -> mně."},
+    {t:"Mě/Mně", s:"Viděl jsi ___ tamhle?", o:["mě","mně"], c:0, why:"4. pád -> mě."},
+    {t:"Mě/Mně", s:"Podej ___ to nářadí.", o:["mě","mně"], c:1, why:"3. pád -> mně."},
+    {t:"Mě/Mně", s:"Bratr ___ doprovodil.", o:["mě","mně"], c:0, why:"4. pád -> mě."},
 
-    // 31-40: Zájmena (Druhy)
-    {t:"Zájmena", s:"Jaký druh: (Někdo) klepe.", o:["osobní","neurčité","vztažné"], c:1, why:"Někdo vyjadřuje neurčitost."},
-    {t:"Zájmena", s:"Jaký druh: (Náš) dům.", o:["přivlastňovací","osobní","ukazovací"], c:0, why:"Náš říká, komu to patří."},
-    {t:"Zájmena", s:"Jaký druh: (Jenž) zpívá.", o:["tázací","vztažné","záporné"], c:1, why:"Jenž je vztažné (spojuje věty)."},
-    {t:"Zájmena", s:"Jaký druh: (Všichni) přišli.", o:["neurčité","osobní","záporné"], c:0, why:"Všichni, každý jsou neurčitá."},
-    {t:"Zájmena", s:"Jaký druh: (Žádný) květ.", o:["záporné","ukazovací","neurčité"], c:0, why:"Žádný popírá existenci."},
-    {t:"Zájmena", s:"Jaký druh: (Tento) narcis.", o:["ukazovací","tázací","vztažné"], c:0, why:"Tento ukazuje na věc."},
-    {t:"Zájmena", s:"Jaký druh: (Kdo) to ví?", o:["tázací","vztažné","osobní"], c:0, why:"V otázce je Kdo zájmeno tázací."},
-    {t:"Zájmena", s:"Jaký druh: (Sami) to víte.", o:["osobní","ukazovací","neurčité"], c:0, why:"Sám/Sami jsou osobní zájmena."},
-    {t:"Zájmena", s:"Jaký druh: (Nijaký) nápad.", o:["neurčité","záporné","vztažné"], c:1, why:"Nijaký je záporné."},
-    {t:"Zájmena", s:"Jaký druh: (Já) ho vidím.", o:["osobní","ukazovací","přivlastňovací"], c:0, why:"Já, ty, on... jsou osobní."},
+    // ZÁJMENA (31-40)
+    {t:"Zájmena", s:"Druh: (Někdo) jde.", o:["neurčité","osobní","záporné"], c:0, why:"Někdo, něco -> neurčitá."},
+    {t:"Zájmena", s:"Druh: (Já) ho vidím.", o:["osobní","ukazovací","vztažné"], c:0, why:"Já, ty, on... jsou osobní."},
+    {t:"Zájmena", s:"Druh: (Tento) květ.", o:["ukazovací","tázací","neurčité"], c:0, why:"Tento, ten, onen -> ukazovací."},
+    {t:"Zájmena", s:"Druh: (Kdo) přišel?", o:["tázací","vztažné","záporné"], c:0, why:"V přímé otázce je to tázací."},
+    {t:"Zájmena", s:"Druh: (Můj) pes.", o:["přivlastňovací","osobní","neurčité"], c:0, why:"Můj, tvůj, náš -> přivlastňovací."},
+    {t:"Zájmena", s:"Druh: Pták, (jenž) zpívá.", o:["vztažné","tázací","ukazovací"], c:0, why:"Spojuje věty -> vztažné (stejně jako který)."},
+    {t:"Zájmena", s:"Druh: (Nikdo) nepřišel.", o:["záporné","neurčité","osobní"], c:0, why:"Nikdo, nic -> záporná."},
+    {t:"Zájmena", s:"Druh: (Sami) jsme to udělali.", o:["osobní","ukazovací","neurčité"], c:0, why:"Sám, sami jsou osobní zájmena."},
+    {t:"Zájmena", s:"Druh: (Každý) den.", o:["neurčité","ukazovací","přivlastňovací"], c:0, why:"Každý, všechen -> neurčitá."},
+    {t:"Zájmena", s:"Druh: (Se) sebou.", o:["zvratné","osobní","vztažné"], c:0, why:"Se, si, sebe -> zvratná."},
 
-    // 41-50: Číslovky (Druhy)
-    {t:"Číslovky", s:"Druh: (Patero) mláďat.", o:["základní","druhová","řadová"], c:1, why:"Patero vyjadřuje počet druhů/souborů."},
-    {t:"Číslovky", s:"Druh: (Třikrát) zahřmělo.", o:["násobná","řadová","základní"], c:0, why:"Kolikrát? -> násobná."},
-    {t:"Číslovky", s:"Druh: (Druhá) neděle.", o:["základní","řadová","druhová"], c:1, why:"Kolikátá? -> řadová."},
-    {t:"Číslovky", s:"Druh: (Mnoho) květů.", o:["základní neurčitá","řadová","násobná"], c:0, why:"Mnoho, několik jsou základní neurčité."},
-    {t:"Číslovky", s:"Druh: (Stý) návštěvník.", o:["základní","řadová","násobná"], c:1, why:"Řadová."},
-    {t:"Číslovky", s:"Druh: (Oboje) boty.", o:["základní","řadová","druhová"], c:2, why:"Druhová."},
-    {t:"Číslovky", s:"Druh: (Sedm) dní.", o:["základní","řadová","násobná"], c:0, why:"Základní."},
-    {t:"Číslovky", s:"Druh: (Dvakrát) měř.", o:["násobná","druhová","řadová"], c:0, why:"Násobná."},
-    {t:"Číslovky", s:"Druh: (Tisíc) let.", o:["základní","řadová","druhová"], c:0, why:"Základní."},
-    {t:"Číslovky", s:"Druh: (Několikátý) pokus.", o:["řadová neurčitá","druhová","násobná"], c:0, why:"Řadová neurčitá."}
+    // ČÍSLOVKY (41-50)
+    {t:"Číslovky", s:"Druh: (Patero) vajec.", o:["druhová","základní","řadová"], c:0, why:"Patero, čtvero -> druhová."},
+    {t:"Číslovky", s:"Druh: (Třikrát) více.", o:["násobná","základní","řadová"], c:0, why:"Kolikrát? -> násobná."},
+    {t:"Číslovky", s:"Druh: (Druhá) v řadě.", o:["řadová","základní","druhová"], c:0, why:"Pořadí (kolikátá?) -> řadová."},
+    {t:"Číslovky", s:"Druh: (Mnoho) lidí.", o:["základní neurčitá","řadová","násobná"], c:0, why:"Základní (kolik?), ale neurčitě."},
+    {t:"Číslovky", s:"Druh: (Sedm) koťat.", o:["základní","řadová","druhová"], c:0, why:"Základní."},
+    {t:"Číslovky", s:"Druh: (Oboje) brýle.", o:["druhová","násobná","řadová"], c:0, why:"Druhová."},
+    {t:"Číslovky", s:"Druh: (Tisící) pokus.", o:["řadová","základní","násobná"], c:0, why:"Řadová."},
+    {t:"Číslovky", s:"Druh: (Dvakrát) měř.", o:["násobná","druhová","základní"], c:0, why:"Násobná."},
+    {t:"Číslovky", s:"Druh: (Deset) tulipánů.", o:["základní","řadová","druhová"], c:0, why:"Základní."},
+    {t:"Číslovky", s:"Druh: (Několikátý) den.", o:["řadová neurčitá","základní","násobná"], c:0, why:"Řadová neurčitá."}
 ];
 
 let score = 0;
-let answeredCount = 0;
+let done = 0;
 
-function initQuiz() {
-    const box = document.getElementById('quizBox');
+function buildQuiz() {
+    const container = document.getElementById('quiz-container');
     QUESTIONS.forEach((q, i) => {
         const card = document.createElement('div');
         card.className = 'q-card';
+        card.id = `card-${i}`;
         card.innerHTML = `
             <span class="q-topic">${q.t}</span>
-            <div class="q-text"><span class="q-num">${i+1}</span>${q.s}</div>
-            <div class="options" id="optContainer${i}">
-                ${q.o.map((opt, oi) => `<button class="opt-btn" onclick="handleSelect(${i}, ${oi}, this)">${opt}</button>`).join('')}
+            <div class="q-text">${i + 1}. ${q.s}</div>
+            <div class="options" id="options-${i}">
+                ${q.o.map((opt, oi) => `
+                    <button class="opt-btn" onclick="checkAnswer(${i}, ${oi}, this)">${opt}</button>
+                `).join('')}
             </div>
-            <div class="feedback" id="feed${i}">${q.why}</div>
+            <div class="explanation" id="exp-${i}">
+                <strong>Vysvětlení:</strong> ${q.why}
+            </div>
         `;
-        box.appendChild(card);
+        container.appendChild(card);
     });
 }
 
-function handleSelect(qIdx, oIdx, btn) {
-    const isCorrect = oIdx === QUESTIONS[qIdx].correct;
-    const container = document.getElementById(`optContainer${qIdx}`);
-    const btns = container.querySelectorAll('.opt-btn');
-    
+function checkAnswer(qIdx, selectedIdx, btn) {
+    const correctIdx = QUESTIONS[qIdx].c;
+    const optionsDiv = document.getElementById(`options-${qIdx}`);
+    const btns = optionsDiv.querySelectorAll('.opt-btn');
+    const exp = document.getElementById(`exp-${qIdx}`);
+
+    // Zamezení vícenásobnému kliknutí
     btns.forEach(b => b.disabled = true);
-    
-    if (isCorrect) {
+
+    if (selectedIdx === correctIdx) {
         btn.classList.add('correct');
         score++;
     } else {
         btn.classList.add('wrong');
-        btns[QUESTIONS[qIdx].correct].classList.add('correct');
+        btns[correctIdx].classList.add('missed'); // Označí tu správnou, kterou uživatel netrefil
     }
-    
-    document.getElementById(`feed${qIdx}`).classList.add('show');
-    answeredCount++;
+
+    exp.style.display = 'block';
+    done++;
     updateStats();
 }
 
 function updateStats() {
-    document.getElementById('progText').innerText = `Vykvetlo: ${answeredCount} / 50`;
-    const pct = Math.round((score / QUESTIONS.length) * 100);
-    document.getElementById('scoreText').innerText = `Úspěšnost: ${pct}%`;
+    document.getElementById('stat-done').innerText = `Hotovo: ${done} / 50`;
+    document.getElementById('stat-score').innerText = `Body: ${score}`;
 }
 
 function showFinal() {
-    if (answeredCount < 50) {
-        alert("Zahrada ještě není celá rozkvetlá! Odpověz na všechny otázky.");
+    if (done < 50) {
+        alert("Nejdříve dořeš všech 50 otázek!");
         return;
     }
     const sum = document.getElementById('summary');
     sum.style.display = 'block';
-    document.getElementById('finalScore').innerText = `${score} / 50`;
+    document.getElementById('final-points').innerText = `${score} / 50`;
     
     let msg = "";
-    if (score === 50) msg = "Jsi král jarní přírody i české gramatiky! 👑🌻";
-    else if (score > 40) msg = "Nádherný výsledek, tvé znalosti jen kvetou! 🌸";
-    else if (score > 25) msg = "Dobré, ale pozor na jarní mrazíky v gramatice! ❄️";
-    else msg = "Tohle jaro budeš muset ještě trochu zalévat učebnice. 💧📖";
+    if (score === 50) msg = "Neuvěřitelné! Jsi mistr jarní češtiny! 👑🌻";
+    else if (score > 40) msg = "Skvělý výsledek! Tvé znalosti kvetou! 🌸";
+    else if (score > 25) msg = "Dobrý základ, ale pozor na jarní mrazíky v gramatice. ❄️";
+    else msg = "Tohle chce ještě hodně zalévat vědomosti. Zkus to znovu! 💧";
     
-    document.getElementById('finalMsg').innerText = msg;
-    sum.scrollIntoView({behavior: 'smooth'});
+    document.getElementById('final-msg').innerText = msg;
+    sum.scrollIntoView({ behavior: 'smooth' });
 }
 
-initQuiz();
+buildQuiz();
 </script>
+
 </body>
 </html>

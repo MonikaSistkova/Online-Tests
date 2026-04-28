@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Čeština PRO - Hard Mode</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #0f172a;
+        --card: #1e293b;
+        --accent: #38bdf8;
+        --correct: #22c55e;
+        --wrong: #ef4444;
+        --text: #f1f5f9;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);padding:2rem 1rem;line-height:1.6}
+    .container{max-width:700px;margin:0 auto}
+    h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;text-align:center;margin-bottom:2rem;color:var(--accent);text-transform:uppercase;letter-spacing:-1px}
+    .stats-bar{background:var(--card);padding:1rem;border-radius:12px;margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center;border:1px solid #334155}
+    .q-card{background:var(--card);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;border:1px solid #334155;transition:transform 0.2s}
+    .q-topic{font-size:0.75rem;color:var(--accent);font-weight:800;text-transform:uppercase;margin-bottom:0.5rem;letter-spacing:1px}
+    .q-text{font-size:1.1rem;font-weight:600;margin-bottom:1.2rem}
+    .options{display:grid;gap:10px}
+    .opt-btn{background:#334155;border:none;padding:12px 16px;border-radius:8px;color:white;text-align:left;cursor:pointer;font-weight:600;transition:0.2s;font-family:inherit}
+    .opt-btn:hover:not(:disabled){background:#475569}
+    .opt-btn.correct{background:var(--correct)}
+    .opt-btn.wrong{background:var(--wrong)}
+    .feedback{margin-top:1rem;padding:1rem;border-radius:8px;display:none;font-size:0.9rem;background:#0f172a}
+    .feedback.show{display:block}
+    .btn-result{display:block;width:100%;padding:1rem;background:var(--accent);color:var(--bg);border:none;border-radius:12px;font-weight:800;font-size:1.1rem;cursor:pointer;margin-top:2rem}
+    #summary{display:none;text-align:center;margin-top:3rem;padding:2rem;background:var(--card);border-radius:20px}
+    .score-big{font-size:4rem;font-weight:900;color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Čeština: HARD MODE</h1>
+    <div class="stats-bar">
+        <span id="progText">0 / 10 splněno</span>
+        <span id="scoreText">Skóre: 0</span>
+    </div>
+    <div id="quizBox"></div>
+    <button class="btn-result" onclick="showFinal()">UKÁZAT FINÁLNÍ VERDIKT</button>
+    <div id="summary">
+        <h2>Tvé hodnocení:</h2>
+        <div class="score-big" id="finalScore">0/0</div>
+        <p id="finalMsg"></p>
+        <button class="btn-result" onclick="location.reload()">Zkusit znovu (Reset)</button>
+    </div>
+</div>
+
+<script>
+const QUESTIONS = [
+    {
+        topic: "Příčestí - Několikanásobný podmět",
+        q: "Děvčata a malá selata ___ na dvorku.",
+        options: ["běhali", "běhaly", "běhala"],
+        correct: 2,
+        why: "Pokud jsou v podmětu pouze jména rodu středního v množném čísle (selata) a ženského (děvčata), v příčestí píšeme -a (podle rodu středního)."
+    },
+    {
+        topic: "Zájmena - Chytáky",
+        q: "Vidím ___ v zrcadle. (2. pád)",
+        options: ["mě", "mně", "mne"],
+        correct: 2,
+        why: "Ve 2. pádě po slovesu (bez předložky) můžeme použít tvary 'mě' i 'mne'. 'Mne' je však knižní/důraznější varianta, která se v těžších testech často objevuje."
+    },
+    {
+        topic: "Větné členy - Příslovečné určení",
+        q: "Vrátil se (kvůli nemoci). Co je v závorce?",
+        options: ["PUM", "PUZ", "PU Příčiny"],
+        correct: 2,
+        why: "Odpovídá na otázku 'Proč? Z jakého důvodu?'. Jde o příčinu, nikoliv o místo nebo způsob."
+    },
+    {
+        topic: "Číslovky - Druhy",
+        q: "Koupil si (několikáté) boty v pořadí.",
+        options: ["Číslovka řadová (neurčitá)", "Číslovka druhová", "Číslovka základní"],
+        correct: 0,
+        why: "Slovo 'několikátý' se ptá na pořadí, podobně jako 'pátý', proto je to číslovka řadová (neurčitá)."
+    },
+    {
+        topic: "Příčestí - Shoda",
+        q: "Davy lidí se ___ na náměstí.",
+        options: ["shromáždili", "shromáždily", "shromáždila"],
+        correct: 1,
+        why: "Podmětem je slovo 'davy' (mužský neživotný), nikoliv 'lidé'. Proto píšeme -y."
+    },
+    {
+        topic: "Zájmena - Druhy",
+        q: "Jaký druh je zájmeno: JENŽ?",
+        options: ["Tázací", "Vztažné", "Ukazovací"],
+        correct: 1,
+        why: "Zájmeno 'jenž' (stejně jako který) spojuje věty, proto je vztažné."
+    },
+    {
+        topic: "Mně / Mě",
+        q: "Podívej se ke ___.",
+        options: ["mně", "mě"],
+        correct: 0,
+        why: "Po předložce 'k' píšeme vždy 3. pád, což je u zájmena já tvar 'mně' (pomůcka: ke tobě)."
+    },
+    {
+        topic: "Větné členy",
+        q: "Šel (pro mléko). Co je v závorce?",
+        options: ["PUM (kam)", "PU Účelu (za jakým účelem)", "Předmět"],
+        correct: 1,
+        why: "Jde o účel cesty. Proč tam šel? Za jakým účelem? Aby přinesl mléko."
+    },
+    {
+        topic: "Číslovky",
+        q: "Mám (oboje) brýle.",
+        options: ["Číslovka základní", "Číslovka násobná", "Číslovka druhová"],
+        correct: 2,
+        why: "Číslovka 'oboje' označuje počet druhů nebo souborů, je to číslovka druhová."
+    },
+    {
+        topic: "Shoda podmětu s přísudkem",
+        q: "Rodiče i děti ___ na výlet.",
+        options: ["jeli", "jely", "jela"],
+        correct: 0,
+        why: "Pokud je v několikanásobném podmětu alespoň jeden rod mužský životný (rodiče), v příčestí je vždy -i."
+    }
+];
+
+let score = 0;
+let answeredCount = 0;
+
+function render() {
+    const box = document.getElementById('quizBox');
+    QUESTIONS.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'q-card';
+        card.innerHTML = `
+            <div class="q-topic">${item.topic}</div>
+            <div class="q-text">${idx + 1}. ${item.q}</div>
+            <div class="options" id="opts${idx}">
+                ${item.options.map((opt, oIdx) => `
+                    <button class="opt-btn" onclick="check(${idx}, ${oIdx}, this)">${opt}</button>
+                `).join('')}
+            </div>
+            <div class="feedback" id="feed${idx}">${item.why}</div>
+        `;
+        box.appendChild(card);
+    });
+}
+
+function check(qIdx, oIdx, btn) {
+    const isCorrect = oIdx === QUESTIONS[qIdx].correct;
+    const opts = document.getElementById(`opts${qIdx}`).querySelectorAll('.opt-btn');
+    
+    opts.forEach(b => b.disabled = true);
+    
+    if (isCorrect) {
+        btn.classList.add('correct');
+        score++;
+    } else {
+        btn.classList.add('wrong');
+        opts[QUESTIONS[qIdx].correct].classList.add('correct');
+    }
+    
+    document.getElementById(`feed${qIdx}`).classList.add('show');
+    answeredCount++;
+    updateStats();
+}
+
+function updateStats() {
+    document.getElementById('progText').innerText = `${answeredCount} / ${QUESTIONS.length} splněno`;
+    document.getElementById('scoreText').innerText = `Skóre: ${score}`;
+}
+
+function showFinal() {
+    if(answeredCount < QUESTIONS.length) {
+        alert("Nejdříve odpověz na všechny otázky!");
+        return;
+    }
+    document.getElementById('summary').style.display = 'block';
+    document.getElementById('finalScore').innerText = `${score} / ${QUESTIONS.length}`;
+    
+    let msg = "";
+    if (score === QUESTIONS.length) msg = "Neuvěřitelné! Jsi mistr češtiny. 👑";
+    else if (score > 7) msg = "Skvělý výkon! Máš úroveň experta. 🔥";
+    else if (score > 4) msg = "Dobrá práce, ale čeština má své pasti. 🛠️";
+    else msg = "Tohle byl těžký test. Zkus to znovu a pouč se z vysvětlivek! 📚";
+    
+    document.getElementById('finalMsg').innerText = msg;
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+render();
+</script>
+</body>
+</html>

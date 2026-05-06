@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Interaktivní Test z Češtiny 🇨🇿</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1, h2 { color: #1a73e8; text-align: center; }
+        .section { margin-bottom: 40px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+        .question { margin-bottom: 20px; padding: 15px; border-radius: 8px; background: #fafafa; border-left: 5px solid #1a73e8; }
+        .options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        button { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; background: #e4e6eb; transition: 0.3s; }
+        button:hover { background: #d8dadf; }
+        button.correct { background: #4caf50 !important; color: white; }
+        button.wrong { background: #f44336 !important; color: white; }
+        .feedback { margin-top: 10px; font-weight: bold; display: none; }
+        .explanation { font-size: 0.9em; color: #555; display: none; margin-top: 5px; font-style: italic; }
+        .score-board { position: sticky; top: 10px; background: #1a73e8; color: white; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px; z-index: 100; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="score-board">
+        Tvé skóre: <span id="score">0</span> / 20 ⭐
+    </div>
+
+    <h1>Procvičování větných členů ✍️</h1>
+
+    <!-- ČÁST 1 -->
+    <div class="section">
+        <h2>Část 1: Pt, PU a Pády 🔍</h2>
+        <p>Urči větný člen a pád u zvýrazněných slov.</p>
+
+        <div class="question" id="q1">
+            <p>1. Dědeček <u>včera</u> sledoval hokej.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q1')">PU času</button>
+                <button onclick="check(this, false, 'q1')">Předmět</button>
+                <button onclick="check(this, false, 'q1')">PU místa</button>
+            </div>
+            <div class="explanation">Správně! Ptáme se: Kdy? 📅</div>
+        </div>
+
+        <div class="question" id="q2">
+            <p>2. Dědeček sledoval <u>hokej</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q2')">Pt (4. pád)</button>
+                <button onclick="check(this, false, 'q2')">Pt (1. pád)</button>
+                <button onclick="check(this, false, 'q2')">PU způsobu</button>
+            </div>
+            <div class="explanation">Ano, sledoval (koho, co?) hokej. 🏒</div>
+        </div>
+
+        <div class="question" id="q3">
+            <p>3. <u>V lese</u> jsme sbírali borůvky.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q3')">PU místa</button>
+                <button onclick="check(this, false, 'q3')">Pt (6. pád)</button>
+                <button onclick="check(this, false, 'q3')">PU času</button>
+            </div>
+            <div class="explanation">Kde? V lese. 🌲</div>
+        </div>
+
+        <div class="question" id="q4">
+            <p>4. Sbírali jsme sladké <u>borůvky</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q4')">Pt (4. pád)</button>
+                <button onclick="check(this, false, 'q4')">Pt (2. pád)</button>
+                <button onclick="check(this, false, 'q4')">PU místa</button>
+            </div>
+            <div class="explanation">Sbírali jsme (koho, co?). 🍇</div>
+        </div>
+
+        <div class="question" id="q5">
+            <p>5. Petr <u>rychle</u> napsal úkol.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q5')">PU způsobu</button>
+                <button onclick="check(this, false, 'q5')">PU času</button>
+                <button onclick="check(this, false, 'q5')">Předmět</button>
+            </div>
+            <div class="explanation">Jak? Rychle. ⚡</div>
+        </div>
+
+        <div class="question" id="q6">
+            <p>6. Napsal úkol <u>do sešitu</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q6')">PU místa (Kam?)</button>
+                <button onclick="check(this, false, 'q6')">Pt (2. pád)</button>
+                <button onclick="check(this, false, 'q6')">PU způsobu</button>
+            </div>
+            <div class="explanation">Určuje směr/místo zapsání. 📖</div>
+        </div>
+
+        <div class="question" id="q7">
+            <p>7. <u>V Praze</u> jsme potkali přítele.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q7')">PU místa</button>
+                <button onclick="check(this, false, 'q7')">Pt (6. pád)</button>
+                <button onclick="check(this, false, 'q7')">PU času</button>
+            </div>
+            <div class="explanation">Kde? V Praze. 🏰</div>
+        </div>
+
+        <div class="question" id="q8">
+            <p>8. Potkali jsme <u>přítele</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q8')">Pt (4. pád)</button>
+                <button onclick="check(this, false, 'q8')">Pt (2. pád)</button>
+                <button onclick="check(this, false, 'q8')">Podmět</button>
+            </div>
+            <div class="explanation">Potkali jsme (koho, co?). 🤝</div>
+        </div>
+
+        <div class="question" id="q9">
+            <p>9. Maminka pekla <u>bábovku</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q9')">Pt (4. pád)</button>
+                <button onclick="check(this, false, 'q9')">Pt (1. pád)</button>
+                <button onclick="check(this, false, 'q9')">PU způsobu</button>
+            </div>
+            <div class="explanation">Pekla (koho, co?). 🥮</div>
+        </div>
+
+        <div class="question" id="q10">
+            <p>10. Pekla ji <u>s radostí</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q10')">PU způsobu</button>
+                <button onclick="check(this, false, 'q10')">Pt (7. pád)</button>
+                <button onclick="check(this, false, 'q10')">PU místa</button>
+            </div>
+            <div class="explanation">Jakým způsobem? 😃</div>
+        </div>
+    </div>
+
+    <!-- ČÁST 2 -->
+    <div class="section">
+        <h2>Část 2: Předmět vs. PUM 🥊</h2>
+        <p>Rozhodni, zda jde o předmět (cíl) nebo o příslovečné určení (místo/směr).</p>
+
+        <div class="question" id="q11">
+            <p>11. Vlezl do <u>skříně</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q11')">PUM (Kam?)</button>
+                <button onclick="check(this, false, 'q11')">Pt (Do čeho?)</button>
+            </div>
+            <div class="explanation">Je to fyzický prostor, kam leze. 🚪</div>
+        </div>
+
+        <div class="question" id="q12">
+            <p>12. Věřil v <u>úspěch</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q12')">Pt (V co?)</button>
+                <button onclick="check(this, false, 'q12')">PUM (Kde?)</button>
+            </div>
+            <div class="explanation">Úspěch není místo, ale abstraktní předmět víry. 🏆</div>
+        </div>
+
+        <div class="question" id="q13">
+            <p>13. Díval se na <u>zahradu</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q13')">PUM (Kam?)</button>
+                <button onclick="check(this, false, 'q13')">Pt (Na co?)</button>
+            </div>
+            <div class="explanation">Směřuje pohled do prostoru zahrady. 🌳</div>
+        </div>
+
+        <div class="question" id="q14">
+            <p>14. Díval se na <u>televizi</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q14')">Pt (Na co?)</button>
+                <button onclick="check(this, false, 'q14')">PUM (Kam?)</button>
+            </div>
+            <div class="explanation">Televize je zde předmět sledování, nikoliv prostor. 📺</div>
+        </div>
+
+        <div class="question" id="q15">
+            <p>15. Skočil do <u>vody</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q15')">PUM (Kam?)</button>
+                <button onclick="check(this, false, 'q15')">Pt (Do čeho?)</button>
+            </div>
+            <div class="explanation">Voda je zde brána jako prostředí/prostor. 🌊</div>
+        </div>
+
+        <div class="question" id="q16">
+            <p>16. Pustil se do <u>práce</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q16')">Pt (Do čeho?)</button>
+                <button onclick="check(this, false, 'q16')">PUM (Kam?)</button>
+            </div>
+            <div class="explanation">Práce není místo, ale činnost (předmět zájmu). 💼</div>
+        </div>
+
+        <div class="question" id="q17">
+            <p>17. Přišel do <u>školy</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q17')">PUM (Kam?)</button>
+                <button onclick="check(this, false, 'q17')">Pt (Do čeho?)</button>
+            </div>
+            <div class="explanation">Škola je budova/místo. 🏫</div>
+        </div>
+
+        <div class="question" id="q18">
+            <p>18. Doufal v <u>zázrak</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q18')">Pt (V co?)</button>
+                <button onclick="check(this, false, 'q18')">PUM (Kde?)</button>
+            </div>
+            <div class="explanation">Abstraktní cíl naděje. ✨</div>
+        </div>
+
+        <div class="question" id="q19">
+            <p>19. Hodil míč na <u>střechu</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q19')">PUM (Kam?)</button>
+                <button onclick="check(this, false, 'q19')">Pt (Na co?)</button>
+            </div>
+            <div class="explanation">Určení cílového místa dopadu. 🏠</div>
+        </div>
+
+        <div class="question" id="q20">
+            <p>20. Myslel na <u>výlet</u>.</p>
+            <div class="options">
+                <button onclick="check(this, true, 'q20')">Pt (Na co?)</button>
+                <button onclick="check(this, false, 'q20')">PUM (Kam?)</button>
+            </div>
+            <div class="explanation">Předmět jeho myšlenek. 🎒</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentScore = 0;
+    const answeredQuestions = new Set();
+
+    function check(btn, isCorrect, qId) {
+        if (answeredQuestions.has(qId)) return;
+
+        answeredQuestions.add(qId);
+        const options = btn.parentElement.querySelectorAll('button');
+        const explanation = btn.parentElement.parentElement.querySelector('.explanation');
+
+        options.forEach(b => b.disabled = true);
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            currentScore++;
+            document.getElementById('score').innerText = currentScore;
+        } else {
+            btn.classList.add('wrong');
+            options.forEach(b => {
+                // Find and highlight the correct one if user was wrong
+            });
+        }
+        explanation.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
